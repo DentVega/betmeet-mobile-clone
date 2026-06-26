@@ -24,3 +24,19 @@ export function setLocale(locale: Locale): void {
 export function t(): Dictionary {
   return dictionaries[currentLocale];
 }
+
+/**
+ * Resolve a dotted message-key (e.g. 'auth.errors.emailInvalid') against the
+ * current dictionary. Returns the key itself if missing (safe fallback).
+ */
+export function tr(path: string): string {
+  let node: unknown = dictionaries[currentLocale];
+  for (const part of path.split('.')) {
+    if (node && typeof node === 'object' && part in (node as object)) {
+      node = (node as Record<string, unknown>)[part];
+    } else {
+      return path;
+    }
+  }
+  return typeof node === 'string' ? node : path;
+}

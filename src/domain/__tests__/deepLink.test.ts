@@ -24,6 +24,17 @@ describe('parseDeepLink', () => {
     });
   });
 
+  it('parses auth/callback with a code', () => {
+    expect(parseDeepLink('betmeet://auth/callback?code=abc123')).toEqual({
+      kind: 'authCallback',
+      code: 'abc123',
+    });
+  });
+
+  it('returns null for auth/callback without a code', () => {
+    expect(parseDeepLink('betmeet://auth/callback')).toBeNull();
+  });
+
   it('parses pools/join with a token and decodes it', () => {
     expect(parseDeepLink('betmeet://pools/join/ABC123')).toEqual({
       kind: 'poolJoin',

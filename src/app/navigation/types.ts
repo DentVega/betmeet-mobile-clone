@@ -9,7 +9,7 @@ export type AuthStackParamList = {
   SignUp: undefined;
   ForgotPassword: undefined;
   ResetPassword: { tokenHash?: string } | undefined;
-  VerifyEmail: { tokenHash?: string; type?: string } | undefined;
+  VerifyEmail: { tokenHash?: string; type?: string; email?: string } | undefined;
 };
 
 export type OnboardingStackParamList = {

@@ -3,8 +3,8 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction (Bolt 0 done → Bolt 1 next)
-- **Bolts Completed:** 1 / 7 (Intent 001)
+- **Current Phase:** Construction (Bolt 1 done → Bolt 2 next)
+- **Bolts Completed:** 2 / 7 (Intent 001)
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -14,7 +14,7 @@
 
 ## Bolts (Execution Units) — Intent 001
 - **Bolt 0 — Foundations & App Shell:** `Completed` — RN Navigation v7 shell, Supabase+keychain session, TanStack Query+Zustand, betmeet:// deep links, i18n. 21 tests, bundle green. See `bolts/bolt-0-foundations/`.
-- **Bolt 1 — Auth:** `Planned` — US-A1…A6.
+- **Bolt 1 — Auth:** `Completed` — 5 screens (RHF+zod), AuthService, Google OAuth (system browser+PKCE), deep-link verify/reset/callback, profile-gate closed, sign-out. 43 tests, bundle green. Device E2E pending Supabase redirect-URL config. See `bolts/bolt-1-auth/`.
 - **Bolt 2 — Write-Path Audit (spike/ADR):** `Planned` — de-risk server-action-vs-callable-API.
 - **Bolt 3 — Onboarding:** `Planned` — US-O1…O4.
 - **Bolt 4 — Matches & Predictions:** `Planned` — US-M1…M5.
