@@ -1,71 +1,65 @@
 # Intent 001 — Bolt Plan
 
-> AI-DLC Inception artifact. Sequenced execution units for v1. Each bolt runs the Construction DDD stages (Model → Design → ADR → Implement → Test) via `/bolt-start`. Order respects the dependency chain and front-loads the migration's top risk.
+> AI-DLC Inception artifact. Sequenced execution units for v1. Each bolt runs the Construction DDD stages (Model → Design → ADR → Implement → Test) via `/bolt-start`.
+>
+> **Re-sequenced 2026-06-26 (ADR-007).** The write-path audit (Bolt 2) proved the betmeet-clone backend isn't mobile-callable. New direction: **own Supabase backend** (RLS + Edge Functions, mobile-direct). A **backend phase is inserted before the mobile write bolts**.
 
-## Sequencing rationale
-Auth and the host shell unblock everything. The **write-path audit** (server-action-vs-callable-API risk from `system-context.md` §6) is pulled forward to a dedicated spike right after Auth, because every write-bearing unit (Onboarding, Predictions, Pools) depends on its outcome. Leaderboard is a read-only leaf and ships last.
-
+## Phases
 ```
-Bolt 0 Foundations/Shell → Bolt 1 Auth → Bolt 2 Write-Path Spike(ADR) → Bolt 3 Onboarding
-                                                                       → Bolt 4 Matches&Predictions
-                                                                       → Bolt 5 Pools → Bolt 6 Leaderboard
+Phase A — Mobile foundation   Bolt 0 Shell ✅ · Bolt 1 Auth ✅ · Bolt 2 Write-Path Audit ✅
+Phase B — Own backend         Bolt 3 Schema+RLS · Bolt 4 Edge Functions · Bolt 5 Match seed
+Phase C — Mobile features     Bolt 6 Onboarding · Bolt 7 Matches&Predictions · Bolt 8 Pools · Bolt 9 Leaderboard
 ```
+Phase C is **blocked on Phase B**. Backend lives in the user's own Supabase (built from the `../betmeet-clone` blueprint).
 
 ---
 
-## Bolt 0 — Foundations & App Shell
-- **Goal:** the host scaffolding every unit relies on. No feature stories yet.
-- **Delivers:** native navigator wiring (auth/onboarding/tabs state machine), Supabase client + **secure-storage session adapter**, deep-link router for `betmeet://`, client data-fetching/cache library, i18n base (`es`/`en` mirror), FlashList baseline.
-- **Key ADRs:** navigation library (Q3); data-fetching/state library (Q2); secure-storage library (NFR-5); deep-link scheme + Universal/App-Links decision (Q4).
-- **Native modules:** secure storage; deep linking. (No image picker, no push.)
-- **Depends on:** nothing.
-- **Exit criteria:** app boots, resolves "no session → Auth stack", and a test deep link routes correctly.
+## Phase A — done
+- **Bolt 0 — Foundations & App Shell** ✅ — RN Navigation v7, Supabase+keychain session, TanStack Query+Zustand, deep links, i18n.
+- **Bolt 1 — Auth** ✅ — US-A1…A6; 5 screens, AuthService, Google OAuth (system browser+PKCE), profile gate.
+- **Bolt 2 — Write-Path Audit (spike)** ✅ — ADR-007: own backend, RLS reads + Edge Function writes.
 
-## Bolt 1 — Auth
-- **Goal:** full v1 auth surface.
-- **Stories:** US-A1…US-A6.
-- **Key ADRs:** Google OAuth flow on RN (system browser + deep-link return); session refresh strategy.
-- **Native modules:** secure storage; deep links (confirm/reset).
-- **Depends on:** Bolt 0.
-- **Exit criteria:** sign-up→verify→sign-in, Google sign-in, reset, and sign-out all work against the real Supabase project; session survives relaunch.
+## Phase B — Own backend (NEW)
+Backend artifacts (migrations + Edge Functions) versioned under `supabase/` (location confirmed at Bolt 3 — req Q5). Blueprint: betmeet-clone `prisma/schema.prisma` + `src/features/*/actions`.
 
-## Bolt 2 — Write-Path Audit (spike → ADR)
-- **Goal:** de-risk the migration. Map **every v1 mutation** (`setNickname`, `completeOnboarding`, `savePrediction`, `createPool`, `joinPublicPool`, `joinPoolByToken`, `leavePool`, `kickMember`, `deletePool`) to a callable path: class 1 (Supabase SDK), class 2 (PostgREST + RLS), or class 3 (needs a thin endpoint/RPC).
-- **Delivers:** an ADR table classifying each mutation, RLS/behavior probes (using the Bolt 1 session), and — for any class-3 — a **surfaced decision to the user** on the minimal backend exception (never a silent backend edit; backend is otherwise frozen).
-- **Depends on:** Bolt 1 (needs a session to probe writes).
-- **Exit criteria:** every v1 write has a confirmed mobile-callable path or an explicit, user-approved plan; Bolts 3–5 can build forms without re-discovering blockers.
+### Bolt 3 — Backend: Core schema + RLS
+- **Goal:** apply the v1 core schema and RLS to the user's Supabase. (FR-BK1, FR-BK2)
+- **Delivers:** migrations for `profiles`, `pools`, `pool_memberships`, `matches`, `predictions`, `prediction_scores` (+ enums/indexes); RLS — authenticated own-row reads (profile, predictions), own+public pools/memberships, matches readable; direct writes restricted (mutations go through Edge Functions). Profile row auto-created on signup (trigger) or via onboarding write.
+- **ADRs:** schema mapping fidelity to blueprint; RLS policy set; profile-creation mechanism.
+- **Exit:** an authenticated JWT can SELECT its own profile/predictions and public pools; the Bolt 1 `profileGate` read works against real tables.
 
-## Bolt 3 — Onboarding
-- **Goal:** the profile-completion gate.
-- **Stories:** US-O1…US-O4.
-- **Depends on:** Bolt 1 (session) + Bolt 2 (nickname/complete write paths).
-- **Exit criteria:** a fresh account is forced through onboarding and lands in the tabs with a complete profile; default-avatar selection works.
+### Bolt 4 — Backend: Edge Functions
+- **Goal:** server-side write logic. (FR-BK3, FR-BK4, FR-BK5)
+- **Delivers (Deno):** `save-prediction` (auth + onboarding + match status/eligibility + **lock at kickoff** + score range + upsert); `create-pool` (name uniqueness, invite-token gen, atomic owner membership); `join-pool` (public + by-token, capacity, duplicate); leave/kick/delete (function or RLS-guarded); **basic scoring** (`compute-score` over finished matches → `prediction_scores`). Logic ported from betmeet-clone server actions.
+- **ADRs:** function boundaries; how scoring is triggered (manual/result-entry for v1); shared validation between mobile and functions.
+- **Exit:** each function invocable with a user JWT, enforcing its rules; deployed to the user's Supabase.
 
-## Bolt 4 — Matches & Predictions
-- **Goal:** fixture browsing + predictions.
-- **Stories:** US-M1…US-M5.
-- **Key ADRs:** fixture read shape + day-grouping in device tz; `savePrediction` write path (from Bolt 2); cache invalidation strategy.
-- **Depends on:** Bolt 0 (data layer) + Bolt 1 + Bolt 2.
-- **Exit criteria:** predictions submit/lock correctly and results/points display; lists are smooth (FlashList).
+### Bolt 5 — Backend: Manual match seed
+- **Goal:** World Cup teams + fixture data. (FR-BK6)
+- **Delivers:** seed script/migration for teams + matches (group stage + knockout placeholders), reusable to enter results (which trigger scoring).
+- **Exit:** the mobile fixture read returns real matches; entering a result produces scores.
 
-## Bolt 5 — Pools
-- **Goal:** full pool lifecycle incl. deep-link join.
-- **Stories:** US-P1…US-P6.
-- **Key ADRs:** owner-only mutation paths + capacity/duplicate handling (from Bolt 2); parked-deep-link-join flow.
-- **Depends on:** Bolt 0 + Bolt 1 + Bolt 2 (this unit owns the densest class-3 surface).
-- **Exit criteria:** create/discover/join(public + token + deep link)/leave/kick/delete all work with server-enforced rules surfaced as errors.
+## Phase C — Mobile features (blocked on Phase B)
+### Bolt 6 — Onboarding (mobile)
+- **Stories:** US-O1…O4. Reads/writes `profiles` (set nickname via function or RLS update + discriminator logic; avatar from default set; complete onboarding). Resolves the gate end-to-end.
+- **Depends on:** Bolt 3 (+ nickname/discriminator: Bolt 4 if function-based).
 
-## Bolt 6 — Leaderboard & Rankings
-- **Goal:** global + per-pool standings (read-only).
-- **Stories:** US-L1…US-L3.
-- **Key ADRs:** live-projection query availability (class-3 check from Bolt 2).
-- **Depends on:** Bolt 4 (scores) + Bolt 5 (pool context).
-- **Exit criteria:** global and pool leaderboards render correct server-computed standings with focus refetch.
+### Bolt 7 — Matches & Predictions (mobile)
+- **Stories:** US-M1…M5. Fixture read (RLS) + `save-prediction` function; lock/results/points display.
+- **Depends on:** Bolt 3, 4, 5.
+
+### Bolt 8 — Pools (mobile)
+- **Stories:** US-P1…P6. `create-pool`/`join-pool` functions; reads for my/public pools, detail; leave/kick/delete; deep-link join.
+- **Depends on:** Bolt 3, 4.
+
+### Bolt 9 — Leaderboard & Rankings (mobile)
+- **Stories:** US-L1…L3. Read global + per-pool standings from scoring output.
+- **Depends on:** Bolt 4 (scoring) + Bolt 7 (predictions) + Bolt 8 (pools).
 
 ---
 
 ## Cross-bolt notes
-- **Topology:** all bolts compile into the single host bundle. No `/repack-init` / Module Federation unless the single-bundle decision is reversed (see `system-context.md` §2 remote-candidate table).
-- **Testing (every bolt):** RNTL for components/flows; `agent-device` E2E focused on auth, deep-link pool-join, and prediction submit.
-- **Each bolt** gets its own `memory-bank/bolts/{bolt-id}/` with ADRs (`adr-NNN.md`) per `memory-bank/standards/system-architecture.md`.
-- **Deferred to v2 (not in any v1 bolt):** Settings (profile/security), push notifications, custom avatar upload, Passkeys, MFA, directed invites, biometrics, realtime score push, Admin.
+- **Topology:** mobile is a single Re.Pack host bundle (no Module Federation). Backend is the user's Supabase (no Next.js server).
+- **Testing:** RNTL for mobile components; Edge Functions tested with Deno test + invoked against a real/staging Supabase; `agent-device` for end-to-end (auth, deep-link join, prediction submit).
+- **Each bolt** keeps its `memory-bank/bolts/{bolt-id}/` with ADRs.
+- **Deferred to v2 (no bolt):** live football-data.org sync, push notifications, custom avatar upload, Settings, Passkeys, MFA, directed invites, biometrics, Admin.

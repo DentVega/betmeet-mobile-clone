@@ -3,8 +3,8 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction (Bolt 1 done → Bolt 2 next)
-- **Bolts Completed:** 2 / 7 (Intent 001)
+- **Current Phase:** Construction — Phase A done; **Phase B (own backend) next** (re-scoped per ADR-007)
+- **Bolts Completed:** 3 / 9 (Intent 001; plan re-sequenced — backend bolts inserted)
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -15,12 +15,18 @@
 ## Bolts (Execution Units) — Intent 001
 - **Bolt 0 — Foundations & App Shell:** `Completed` — RN Navigation v7 shell, Supabase+keychain session, TanStack Query+Zustand, betmeet:// deep links, i18n. 21 tests, bundle green. See `bolts/bolt-0-foundations/`.
 - **Bolt 1 — Auth:** `Completed` — 5 screens (RHF+zod), AuthService, Google OAuth (system browser+PKCE), deep-link verify/reset/callback, profile-gate closed, sign-out. 43 tests, bundle green. Device E2E pending Supabase redirect-URL config. See `bolts/bolt-1-auth/`.
-- **Bolt 2 — Write-Path Audit (spike/ADR):** `Planned` — de-risk server-action-vs-callable-API.
-- **Bolt 3 — Onboarding:** `Planned` — US-O1…O4.
-- **Bolt 4 — Matches & Predictions:** `Planned` — US-M1…M5.
-- **Bolt 5 — Pools:** `Planned` — US-P1…P6.
-- **Bolt 6 — Leaderboard & Rankings:** `Planned` — US-L1…L3.
+- **Bolt 2 — Write-Path Audit (spike/ADR):** `Completed` — ADR-007: betmeet-clone backend not mobile-callable → build own Supabase backend (RLS + Edge Functions). See `bolts/bolt-2-write-path-audit/`.
+- _Phase B — own backend (NEW):_
+- **Bolt 3 — Backend: Core schema + RLS:** `Planned` (NEXT) — FR-BK1/2; tables + RLS in user's Supabase.
+- **Bolt 4 — Backend: Edge Functions:** `Planned` — FR-BK3/4/5; save-prediction (lock), create/join pool, basic scoring.
+- **Bolt 5 — Backend: Match seed:** `Planned` — FR-BK6; manual teams + fixture.
+- _Phase C — mobile features (blocked on Phase B):_
+- **Bolt 6 — Onboarding:** `Planned` — US-O1…O4.
+- **Bolt 7 — Matches & Predictions:** `Planned` — US-M1…M5.
+- **Bolt 8 — Pools:** `Planned` — US-P1…P6.
+- **Bolt 9 — Leaderboard & Rankings:** `Planned` — US-L1…L3.
 
 ## Deferred or Blocked Tasks
-- **Module Federation setup** — deferred by decision (single-bundle app for now). Run `/repack-init` only when an on-demand remote-chunk requirement is confirmed.
-- **State library / navigation / FlashList** — to be chosen on the first relevant bolt.
+- **Phase C mobile write bolts** — blocked until Phase B (backend minimum) exists.
+- **Module Federation setup** — deferred (single-bundle). Run `/repack-init` only if on-demand chunking is needed.
+- **Deferred to v2:** live football-data.org sync, push notifications, email, custom avatar upload, Settings, Passkeys, MFA, biometrics, Admin.
