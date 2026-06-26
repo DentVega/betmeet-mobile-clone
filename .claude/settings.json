@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "rn-repack-aidlc@rn-repack-aidlc": true
+  }
+}
