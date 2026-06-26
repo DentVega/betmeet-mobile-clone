@@ -7,6 +7,7 @@
 export type DeepLinkIntent =
   | { kind: 'authConfirm'; tokenHash: string; type: string | null }
   | { kind: 'authReset'; tokenHash: string }
+  | { kind: 'authCallback'; code: string }
   | { kind: 'poolJoin'; token: string };
 
 export const DEEP_LINK_SCHEME = 'betmeet://';
@@ -35,6 +36,14 @@ export function parseDeepLink(url: string): DeepLinkIntent | null {
       return null;
     }
     return { kind: 'authReset', tokenHash };
+  }
+
+  if (segments[0] === 'auth' && segments[1] === 'callback') {
+    const code = params.get('code');
+    if (!code) {
+      return null;
+    }
+    return { kind: 'authCallback', code };
   }
 
   if (segments[0] === 'pools' && segments[1] === 'join' && segments[2]) {

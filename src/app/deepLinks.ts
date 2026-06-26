@@ -17,6 +17,7 @@ import {
 import { resolveAppPhase, type AppPhase } from '../domain/appPhase';
 import { useSessionStore } from '../session/sessionStore';
 import { navigationRef } from './navigationRef';
+import { exchangeOAuthCode } from '../auth/googleOAuth';
 
 export type DeepLinkAction =
   | { type: 'park'; intent: DeepLinkIntent }
@@ -68,6 +69,11 @@ function navigateForIntent(intent: DeepLinkIntent): void {
       break;
     case 'authReset':
       navigate('ResetPassword', { tokenHash: intent.tokenHash });
+      break;
+    case 'authCallback':
+      // OAuth return: complete the session in the background; the nav state
+      // machine advances when the session updates. No screen to navigate to.
+      void exchangeOAuthCode(intent.code);
       break;
   }
 }

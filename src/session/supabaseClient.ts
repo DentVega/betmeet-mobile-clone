@@ -19,6 +19,8 @@ export const supabase: SupabaseClient = createClient(
       persistSession: true,
       // Mobile uses deep links + verifyOtp, not URL-fragment session detection.
       detectSessionInUrl: false,
+      // PKCE for mobile OAuth + recovery deep links (ADR-006).
+      flowType: 'pkce',
     },
   },
 );

@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { AppTabsParamList, PoolsStackParamList } from './types';
 import { PlaceholderScreen } from '../../ui/Screen';
+import { SignOutButton } from '../../auth/SignOutButton';
 import { t } from '../../i18n';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
@@ -30,7 +31,11 @@ function PoolsStack() {
 export function AppTabs() {
   const dict = t();
   return (
-    <Tabs.Navigator screenOptions={{ headerShown: false }}>
+    <Tabs.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerRight: () => <SignOutButton />,
+      }}>
       <Tabs.Screen
         name="Matches"
         component={MatchesScreen}
