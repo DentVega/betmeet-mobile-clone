@@ -15,11 +15,15 @@ import { RootNavigator } from './RootNavigator';
 import { BootingScreen } from '../ui/Screen';
 import { useSessionBootstrap } from '../session/useSessionBootstrap';
 import { useDeepLinkHandler } from './deepLinks';
+import { useBrandStore } from '../theme/brandStore';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
   useSessionBootstrap();
   useDeepLinkHandler();
+  React.useEffect(() => {
+    void useBrandStore.getState().hydrate();
+  }, []);
 
   return (
     <SafeAreaProvider>
