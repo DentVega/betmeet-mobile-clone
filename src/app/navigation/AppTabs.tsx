@@ -19,6 +19,7 @@ import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboardScreen';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
+import { fonts } from '../../theme/tokens';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
@@ -53,10 +54,11 @@ export function AppTabs() {
         headerShown: true,
         headerRight: () => <SignOutButton />,
         headerStyle: { backgroundColor: colors.card },
-        headerTitleStyle: { color: colors.foreground },
+        headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },
         headerShadowVisible: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedForeground,
+        tabBarLabelStyle: { fontFamily: fonts.sansMedium },
         tabBarStyle: { backgroundColor: colors.card, borderTopColor: colors.border },
       }}>
       <Tabs.Screen
