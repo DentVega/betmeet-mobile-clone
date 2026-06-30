@@ -3,8 +3,8 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction — Phase B in progress (own backend)
-- **Bolts Completed:** 5 / 9 (Intent 001) — Bolt 4 Edge Functions done; **Bolt 5 (match seed) next**, then Phase C
+- **Current Phase:** Construction — **Phase B (own backend) complete**; Phase C (mobile features) next
+- **Bolts Completed:** 6 / 9 (Intent 001) — backend (schema/RLS + Edge Functions + seed) authored & validated; **Bolt 6 (Onboarding) next**
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -19,7 +19,7 @@
 - _Phase B — own backend (NEW):_
 - **Bolt 3 — Backend: Core schema + RLS:** `Completed (SQL ready)` — `supabase/` with 10 tables, 16 RLS policies, triggers (profile auto-create, lock guard); validated on ephemeral PG17. **User runs `supabase db push`** to apply. See `bolts/bolt-3-backend-schema/`.
 - **Bolt 4 — Backend: Edge Functions:** `Completed (code ready)` — 4 Deno functions + atomic plpgsql (fn_save_prediction/create_pool/join_pool); scoring ported; validated on ephemeral PG17 (lock/capacity/idempotent/NAME_TAKEN all pass; 1 bug fixed). **User runs `db push` + `functions deploy` + `secrets set ADMIN_SECRET`.** See `bolts/bolt-4-edge-functions/`.
-- **Bolt 5 — Backend: Match seed:** `Planned` — FR-BK6; manual teams + fixture.
+- **Bolt 5 — Backend: Match seed:** `Completed (SQL ready)` — idempotent dev fixture: 1 competition, 5 phases, 16 teams, 14 matches (3 FINISHED). Validated on PG17. Applies via `db push`. See `bolts/bolt-5-match-seed/`.
 - _Phase C — mobile features (blocked on Phase B):_
 - **Bolt 6 — Onboarding:** `Planned` — US-O1…O4.
 - **Bolt 7 — Matches & Predictions:** `Planned` — US-M1…M5.

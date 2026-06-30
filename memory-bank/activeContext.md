@@ -3,7 +3,7 @@
 > **Agent note:** This is your short-term memory. Read it at the start of every session and update it immediately after making an important decision, changing focus, or encountering a blocker.
 
 ## Current Focus
-- **Phase B (own backend) in progress.** Bolt 3 (schema+RLS) and Bolt 4 (Edge Functions) **code complete + validated on ephemeral PG17**; not yet applied to the real Supabase. `supabase/` has migrations (schema, RLS, triggers, write-functions) + 4 Deno functions (save-prediction/create-pool/join-pool/compute-score) with atomic plpgsql. Next: **Bolt 5 (manual match/team seed)**, then Phase C mobile features.
+- **Phase B (own backend) COMPLETE (code).** `supabase/` has all migrations (schema, RLS, triggers, write-functions, dev fixture) + 4 Deno Edge Functions. All validated on ephemeral PG17 (7 migrations apply clean; functions exercised: create/join/save/lock/scoring rules; seed counts + idempotency). **Not yet applied to the real Supabase.** Next: **Phase C — Bolt 6 (Onboarding)**.
 - Architecture (ADR-007): own Supabase backend, RLS reads + Edge Function writes, mobile-direct, no Next.js. Blueprint = `../betmeet-clone`.
 - Inception re-scoped: `requirements.md`, `system-context.md`, `bolt-plan.md` updated. New phase order: Phase A (shell/auth/audit) ✅ → **Phase B (backend: schema+RLS → Edge Functions → match seed)** → Phase C (mobile onboarding/predictions/pools/leaderboard, blocked on B).
 - Bolts 0/1/2 done (3/9). Env wiring done (`.env` → DefinePlugin). `profileGate` corrected to `profiles`/`onboarding_completed`.
@@ -20,4 +20,4 @@
 
 ## Immediate Next Step
 - **User action to activate the backend:** `supabase login && link --project-ref uyhymoykzwlovnqpzwnn && db push`; `supabase functions deploy save-prediction create-pool join-pool compute-score`; `supabase secrets set ADMIN_SECRET=<value>`; dashboard: `betmeet://` redirect URLs + public `avatars` bucket.
-- **`/bolt-start` for Bolt 5 — Backend: manual World Cup teams + fixture seed.** Then Phase C: Bolt 6 Onboarding, 7 Predictions, 8 Pools, 9 Leaderboard.
+- **`/bolt-start` for Bolt 6 — Onboarding (Phase C, mobile).** Then 7 Predictions, 8 Pools, 9 Leaderboard. Recommended: run `db push` + `functions deploy` before/early in Phase C to verify mobile flows against the real project.
