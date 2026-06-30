@@ -3,8 +3,8 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction — Phase A done; **Phase B (own backend) next** (re-scoped per ADR-007)
-- **Bolts Completed:** 3 / 9 (Intent 001; plan re-sequenced — backend bolts inserted)
+- **Current Phase:** Construction — Phase B in progress (own backend)
+- **Bolts Completed:** 4 / 9 (Intent 001) — Bolt 3 backend schema done; **Bolt 4 (Edge Functions) next**
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -17,7 +17,7 @@
 - **Bolt 1 — Auth:** `Completed` — 5 screens (RHF+zod), AuthService, Google OAuth (system browser+PKCE), deep-link verify/reset/callback, profile-gate closed, sign-out. 43 tests, bundle green. Device E2E pending Supabase redirect-URL config. See `bolts/bolt-1-auth/`.
 - **Bolt 2 — Write-Path Audit (spike/ADR):** `Completed` — ADR-007: betmeet-clone backend not mobile-callable → build own Supabase backend (RLS + Edge Functions). See `bolts/bolt-2-write-path-audit/`.
 - _Phase B — own backend (NEW):_
-- **Bolt 3 — Backend: Core schema + RLS:** `Planned` (NEXT) — FR-BK1/2; tables + RLS in user's Supabase.
+- **Bolt 3 — Backend: Core schema + RLS:** `Completed (SQL ready)` — `supabase/` with 10 tables, 16 RLS policies, triggers (profile auto-create, lock guard); validated on ephemeral PG17. **User runs `supabase db push`** to apply. See `bolts/bolt-3-backend-schema/`.
 - **Bolt 4 — Backend: Edge Functions:** `Planned` — FR-BK3/4/5; save-prediction (lock), create/join pool, basic scoring.
 - **Bolt 5 — Backend: Match seed:** `Planned` — FR-BK6; manual teams + fixture.
 - _Phase C — mobile features (blocked on Phase B):_

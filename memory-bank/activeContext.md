@@ -18,5 +18,6 @@
 - **TOP RISK:** web mutations are Next.js **server actions**, not callable from mobile. Bolt 2 (Write-Path Audit) must map each v1 write to Supabase SDK / PostgREST+RLS / needs-a-thin-endpoint, and surface any backend exception to the user. Gates Onboarding/Predictions/Pools.
 
 ## Immediate Next Step
-- **`/bolt-start` for Bolt 3 — Backend: Core schema + RLS** (Phase B). First decide where the `supabase/` project (migrations + Edge Functions) is versioned — default: a `supabase/` dir in this repo (req Q5). Blueprint: betmeet-clone `prisma/schema.prisma` + RLS migration + `src/features/*/actions`.
-- (Independent) Auth device E2E still needs Supabase redirect-URL allow-listing + Google provider + dev-server restart.
+- **User action:** apply Bolt 3 schema — `supabase login && supabase link --project-ref uyhymoykzwlovnqpzwnn && supabase db push`; in dashboard add `betmeet://` redirect URLs + create public `avatars` bucket.
+- **`/bolt-start` for Bolt 4 — Backend: Edge Functions** (save-prediction w/ lock, create-pool, join-pool, basic scoring; + nickname discriminator fn). Then Bolt 5 (match seed), then Phase C mobile features.
+- `supabase/` lives in this repo (Q5 resolved). Bolt 3 SQL validated on ephemeral PG17; not yet applied to the real project.
