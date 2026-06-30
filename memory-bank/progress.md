@@ -4,7 +4,7 @@
 
 ## Overall Status
 - **Current Phase:** Construction — Phase C (mobile features) in progress
-- **Bolts Completed:** 7 / 9 (Intent 001) — Onboarding done; **Bolt 7 (Matches & Predictions) next**
+- **Bolts Completed:** 8 / 9 (Intent 001) — Matches & Predictions done; **Bolt 8 (Pools) next**, then Bolt 9 (Leaderboard)
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -22,7 +22,7 @@
 - **Bolt 5 — Backend: Match seed:** `Completed (SQL ready)` — idempotent dev fixture: 1 competition, 5 phases, 16 teams, 14 matches (3 FINISHED). Validated on PG17. Applies via `db push`. See `bolts/bolt-5-match-seed/`.
 - _Phase C — mobile features (blocked on Phase B):_
 - **Bolt 6 — Onboarding:** `Completed` — wizard (nickname/avatar/rules) + fn_set_nickname + set-nickname Edge Function; gate flips on complete. tsc/jest/bundle green; fn validated on PG17. **User: `db push` + `functions deploy set-nickname`.** See `bolts/bolt-6-onboarding/`.
-- **Bolt 7 — Matches & Predictions:** `Planned` — US-M1…M5.
+- **Bolt 7 — Matches & Predictions:** `Completed` — Matches tab (FlashList day-grouped) + PredictionForm via save-prediction; fixture.ts pure (group/past/canEdit). tsc/jest 51 ✓/bundle green. **FlashList native → rebuild.** See `bolts/bolt-7-predictions/`.
 - **Bolt 8 — Pools:** `Planned` — US-P1…P6.
 - **Bolt 9 — Leaderboard & Rankings:** `Planned` — US-L1…L3.
 
