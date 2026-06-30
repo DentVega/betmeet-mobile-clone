@@ -9,8 +9,11 @@
  */
 import { supabase } from '../session/supabaseClient';
 
-const PROFILE_TABLE = 'Profile';
-const ONBOARDING_COL = 'onboardingCompleted';
+// Confirmed against the live schema in Bolt 2 (write-path audit): Prisma maps
+// the Profile model to snake_case `profiles.onboarding_completed`. Reachable
+// via PostgREST only with an authenticated user JWT (RLS own-row SELECT).
+const PROFILE_TABLE = 'profiles';
+const ONBOARDING_COL = 'onboarding_completed';
 const ID_COL = 'id';
 
 export async function fetchOnboardingCompleted(userId: string): Promise<boolean> {

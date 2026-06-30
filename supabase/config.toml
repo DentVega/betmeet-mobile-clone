@@ -1,0 +1,39 @@
+# Supabase project config for Betmeet Mobile's own backend (ADR-007/008).
+# Schema + RLS in migrations/; Edge Functions land in functions/ (Bolt 4).
+project_id = "betmeet-mobile"
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.migrations]
+schema_paths = []
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+# The mobile app uses the betmeet:// scheme for OAuth/email deep links.
+# (For the REMOTE project, set these under Auth → URL Configuration in the dashboard.)
+site_url = "betmeet://"
+additional_redirect_urls = [
+  "betmeet://auth/callback",
+  "betmeet://auth/reset",
+  "betmeet://auth/confirm",
+]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true

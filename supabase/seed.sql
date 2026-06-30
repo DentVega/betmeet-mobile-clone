@@ -1,0 +1,3 @@
+-- Local-reset seed (`supabase db reset`). Default avatars are seeded by the
+-- migration 20260630120400_seed_avatars.sql. The full World Cup teams + fixture
+-- seed is delivered in Bolt 5 (B-Seed) and will be appended/imported here.

@@ -3,8 +3,9 @@
 > **Agent note:** This is your short-term memory. Read it at the start of every session and update it immediately after making an important decision, changing focus, or encountering a blocker.
 
 ## Current Focus
-- **Bolt 1 (Auth) complete** for Intent 001 (on branch `feat/bolt-1-auth`). 5 auth screens (RHF+zod), AuthService over supabase.auth, Google OAuth (system browser + PKCE), deep-link verify/reset/OAuth-callback, profile-gate resolved (Bolt 0 TODO closed), sign-out. `tsc` clean, 43 jest tests, Rspack bundle green. Artifacts: `memory-bank/bolts/bolt-1-auth/`. Next: **Bolt 2 — Write-Path Audit**.
-- Env wiring done: `.env`/`.env.local` loaded by `rspack.config.mjs` → DefinePlugin. Real Supabase creds in `.env` (gitignored).
+- **Bolt 2 (Write-Path Audit) complete → MAJOR RE-SCOPE (ADR-007).** The betmeet-clone backend exposes data only via Next.js server actions (not mobile-callable). New direction: **build an own backend in the user's Supabase** (currently Auth-only), blueprinted on `../betmeet-clone`. Architecture: **RLS reads + Edge Functions (Deno) writes, mobile-direct, no Next.js.** Defer: live football-data sync, push, email.
+- Inception re-scoped: `requirements.md`, `system-context.md`, `bolt-plan.md` updated. New phase order: Phase A (shell/auth/audit) ✅ → **Phase B (backend: schema+RLS → Edge Functions → match seed)** → Phase C (mobile onboarding/predictions/pools/leaderboard, blocked on B).
+- Bolts 0/1/2 done (3/9). Env wiring done (`.env` → DefinePlugin). `profileGate` corrected to `profiles`/`onboarding_completed`.
 
 ## Recent Technical Decisions
 - **Single bundle, host-only — no Module Federation in v1.** Remote candidates (Matches, Pools, Leaderboard) recorded for later; do not `/repack-init` until reversed.
@@ -17,5 +18,6 @@
 - **TOP RISK:** web mutations are Next.js **server actions**, not callable from mobile. Bolt 2 (Write-Path Audit) must map each v1 write to Supabase SDK / PostgREST+RLS / needs-a-thin-endpoint, and surface any backend exception to the user. Gates Onboarding/Predictions/Pools.
 
 ## Immediate Next Step
-- Before device E2E of auth: in the Supabase dashboard allow-list redirect URLs `betmeet://auth/callback`, `/auth/reset`, `/auth/confirm`, ensure Google provider is on, and restart the dev server (DefinePlugin reads `.env`).
-- Then `/bolt-start` for **Bolt 2 — Write-Path Audit** (classify every v1 mutation; confirm the `Profile` table/column names used by the profile-gate).
+- **User action:** apply Bolt 3 schema — `supabase login && supabase link --project-ref uyhymoykzwlovnqpzwnn && supabase db push`; in dashboard add `betmeet://` redirect URLs + create public `avatars` bucket.
+- **`/bolt-start` for Bolt 4 — Backend: Edge Functions** (save-prediction w/ lock, create-pool, join-pool, basic scoring; + nickname discriminator fn). Then Bolt 5 (match seed), then Phase C mobile features.
+- `supabase/` lives in this repo (Q5 resolved). Bolt 3 SQL validated on ephemeral PG17; not yet applied to the real project.

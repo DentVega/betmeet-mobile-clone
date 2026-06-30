@@ -1,26 +1,26 @@
 # Intent 001 — System Context
 
-> AI-DLC Inception artifact. How the mobile app is structured and how it talks to the (frozen) backend. Refined by ADRs during Construction. Pairs with `requirements.md`.
+> AI-DLC Inception artifact. How the mobile app is structured and how it talks to its **own Supabase backend**. Refined by ADRs during Construction. Pairs with `requirements.md`.
+>
+> **Re-scoped 2026-06-26 (ADR-007).** Was "pure client of the frozen betmeet-clone backend"; that backend has no mobile-callable data API (server-actions only). New direction: **own backend in the user's Supabase** — RLS reads + Edge Function writes, mobile-direct, no Next.js. betmeet-clone is the blueprint, not a runtime dependency.
 
 ## 1. Context boundary
 ```
-┌──────────────────────────── Betmeet Mobile (RN 0.86 + Re.Pack, NEW) ─────────────────────────────┐
-│  App shell (host)                                                                                 │
-│   ├─ Auth stack ──────────► Onboarding stack ──────────► App tabs                                 │
-│   │                                                       (Matches │ Pools │ Rankings)            │
-│   └─ Deep-link router (betmeet://)                                                                 │
-│                                                                                                    │
-│  Data/session layer:  @supabase/supabase-js  +  secure token storage  +  client cache (React Query?)│
-└───────────────────────────────────────────────┬───────────────────────────────────────────────────┘
-                                                  │  HTTPS (anon key + JWT, RLS)
-                                                  ▼
-                        ┌──────────── EXISTING backend — FROZEN, NOT migrated ────────────┐
-                        │  Supabase Auth · Supabase Postgres (PostgREST + RLS) · Storage   │
-                        │  Next.js server actions / route handlers · football-data.org sync │
-                        │  Resend email · Web Push dispatch (unused by mobile in v1)         │
-                        └──────────────────────────────────────────────────────────────────┘
+┌──────────────────────────── Betmeet Mobile (RN 0.86 + Re.Pack) ─────────────────────────────┐
+│  App shell (host): Auth ► Onboarding ► App tabs (Matches│Pools│Rankings) · Deep links        │
+│  Data/session layer: @supabase/supabase-js · secure token storage · TanStack Query cache     │
+└───────────────┬───────────────────────────────────────────────────┬──────────────────────────┘
+                │ reads: PostgREST + RLS (user JWT)                   │ writes: functions.invoke
+                ▼                                                     ▼
+        ┌──────────────────────── User's OWN Supabase project (BUILT this scope) ───────────────────┐
+        │  Auth (existing) · Postgres + RLS (schema from betmeet-clone blueprint)                    │
+        │  Edge Functions (Deno): save-prediction (lock), create-pool, join-pool, scoring            │
+        │  Storage (default avatars) · manual match seed                                             │
+        │  DEFERRED: football-data.org sync · push · email                                           │
+        └────────────────────────────────────────────────────────────────────────────────────────┘
+              (blueprint reference, NOT a runtime dependency:  ../betmeet-clone  Next.js+Prisma)
 ```
-The mobile app is a **pure client** of the existing system. Nothing server-side changes for v1.
+The mobile app talks **directly** to the user's Supabase. There is **no Next.js server** in the runtime. The backend (schema/RLS/Edge Functions) is built in dedicated backend bolts before the mobile write bolts.
 
 ## 2. Bundle topology — single bundle, host-only (v1)
 - **Decision:** one Re.Pack/Rspack bundle. **No Module Federation in v1** (consistent with `memory-bank/standards/system-architecture.md`).
@@ -55,26 +55,22 @@ The mobile app is a **pure client** of the existing system. Nothing server-side 
 - Router resolves links pre- and post-auth: a `pools/join` link while unauthenticated parks the intent, runs auth/onboarding, then completes the join.
 - Custom scheme for v1; Universal Links / App Links (https) tracked as Q4 for reliable open-from-mail behavior.
 
-## 5. Data & session layer
-- **Client:** `@supabase/supabase-js` pointed at the existing Supabase project (anon key); RLS enforces authorization exactly as for web (NFR-6).
-- **Session:** access + refresh tokens in **encrypted secure storage** (Keychain/Keystore), not plain AsyncStorage (NFR-5). Supabase client configured with a secure-storage adapter + autoRefresh. Sign-out clears both.
-- **Reads:** PostgREST `select` (fixture, pools, memberships, rankings) wrapped in a client cache (React Query candidate — NFR-4, Q2). Invalidate on prediction submit, pool mutations, and screen focus. No ISR/`unstable_cache` equivalent — replaced by `staleTime` + focus refetch.
-- **Writes:** see the integration risk below.
+## 5. Data & session layer (own Supabase — ADR-007)
+- **Client:** `@supabase/supabase-js` pointed at the **user's own** Supabase project. RLS enforces authorization.
+- **Session:** access + refresh tokens in **encrypted secure storage** (Keychain/Keystore), not plain AsyncStorage (NFR-5). PKCE; secure-storage adapter + autoRefresh (Bolt 0/1). Sign-out clears both.
+- **Reads:** PostgREST `select` (fixture, pools, memberships, profile gate) under **RLS** (role `authenticated`), wrapped in TanStack Query; invalidate on write + screen focus; `staleTime` replaces ISR. Aggregated rankings/leaderboard come from scoring computed in Edge Functions (read the resulting tables/rows).
+- **Writes:** via **Edge Functions** (`supabase.functions.invoke('save-prediction' | 'create-pool' | 'join-pool', …)`), which carry the business logic (lock-at-kickoff, capacity, token gen, atomicity, discriminator, scoring). The client never writes those tables directly.
 
-## 6. Integration risk — server actions vs callable API (TOP RISK)
-The web performs mutations as **Next.js server actions** (`signUp`, `signIn`, `savePrediction`, `createPool`, `joinPublicPool`, `joinPoolByToken`, `leavePool`, `kickMember`, `deletePool`, `setNickname`, `completeOnboarding`, …). These are **not callable from a mobile client**. For each v1 write, exactly one of:
-1. It maps directly to a **Supabase Auth** SDK call (most auth flows: signUp, signIn, OAuth, reset, verify). ✅ low risk.
-2. It maps to a **PostgREST insert/update** permitted by RLS (e.g. upsert prediction, create membership). ⚠️ verify RLS allows it and that no server-only business logic (capacity checks, lock-at-kickoff, scoring) is bypassed.
-3. It needs server-side logic that only exists inside a server action → **requires exposing a thin endpoint / Postgres RPC** on the backend. ❗ This is the one place the "don't touch the backend" rule may need a narrowly-scoped exception; surface it to the user, don't silently edit the backend.
-- **Action:** the first Pools/Predictions Construction bolt opens with a write-path audit mapping every v1 mutation to (1)/(2)/(3). Recorded as an ADR.
+## 6. Write-path resolution (was TOP RISK — RESOLVED by ADR-007)
+The audit (`bolts/bolt-2-write-path-audit/`) confirmed the betmeet-clone backend exposes data only via Next.js server actions (uncallable from mobile). **Resolution:** build an own Supabase backend — reads via RLS, **writes via Edge Functions** that port the server-action logic. Per-operation classification lives in ADR-007. Mobile write bolts are **blocked until the backend minimum exists** (schema+RLS → Edge Functions → match seed).
 
-## 7. Domain model (client-side view; mirrors `prisma/schema.prisma`, read-only ownership)
-- **Profile** (id=auth.users.id, nicknameBase/Discriminator, avatarUrl/Source, onboardingCompleted, locale)
-- **Match** (teams or placeholders, kickoffAt, status, scores, winnerTeamId)
-- **Prediction** (userId, matchId, homeScore, awayScore, penaltyWinnerTeamId, lockedAt)
-- **PredictionScore** (matchedCase, basePoints, penaltyPoints, total) — server-computed, read-only on mobile.
-- **Pool** (name, type, capacity, inviteToken, ownerId) / **PoolMembership** (poolId, userId, joinedAt, archivedAt)
-The mobile app holds no schema ownership; entities are DTO-shaped projections of server data.
+## 7. Domain model (mirrors betmeet-clone `prisma/schema.prisma`, snake_case in our DB)
+- **profiles** (id=auth.users.id, nickname_base/discriminator, avatar_url/source, onboarding_completed, locale)
+- **matches** (teams or placeholders, kickoff_at, status, scores, winner_team_id)
+- **predictions** (user_id, match_id, home_score, away_score, penalty_winner_team_id, locked_at)
+- **prediction_scores** (matched_case, base_points, penalty_points, total) — written by the scoring Edge Function.
+- **pools** (name, type, capacity, invite_token, owner_id) / **pool_memberships** (pool_id, user_id, joined_at, archived_at)
+The schema is **owned by our backend** (built from the blueprint); the mobile app consumes DTO-shaped projections.
 
 ## 8. Cross-cutting standards hooks
 - Perf: FlashList everywhere a list scrolls; lazy-load Pools-detail/leaderboard screens (NFR-2/3).

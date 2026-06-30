@@ -3,7 +3,9 @@
 > AI-DLC Inception artifact. Source of truth for what v1 must do. Traces forward to `system-context.md` → `units/*/unit-brief.md` → `stories/` → bolts.
 
 ## Business intent
-Migrate **betmeet-clone** — a World Cup 2026 prediction pool ("quiniela") web app (Next.js + Supabase + Prisma) — to a **bare React Native 0.86 + Re.Pack 5** mobile app. The mobile app **reuses the existing Supabase/API backend unchanged**: no DB, Prisma, or server code is migrated. Only the frontend, navigation, and Supabase session handling are built for mobile. Mobile units **mirror the web units** so the two stay conceptually aligned.
+Rebuild **betmeet-clone** — a World Cup 2026 prediction pool ("quiniela") web app (Next.js + Supabase + Prisma) — as a **bare React Native 0.86 + Re.Pack 5** mobile app with its **own Supabase backend**.
+
+> **Re-scoped 2026-06-26 (ADR-007).** The original plan ("reuse the betmeet-clone backend unchanged") proved infeasible — that backend exposes data only through Next.js server actions, which a mobile client cannot call (see `bolts/bolt-2-write-path-audit/`). New direction: build an **own backend in the user's existing Supabase project** (today Auth-only), using betmeet-clone as the **blueprint**. Architecture = **Supabase Postgres + RLS (reads) + Edge Functions/Deno (writes)**, mobile talks **directly to Supabase — no Next.js server**. betmeet-clone remains the source-of-truth reference for schema and business logic, not a runtime dependency.
 
 ## Source of truth (web repo)
 `/Volumes/SSDExterno/prodproyects/betmeet-clone`
@@ -22,17 +24,25 @@ Migrate **betmeet-clone** — a World Cup 2026 prediction pool ("quiniela") web 
 | **Native capabilities** | Secure token storage (mandatory) + deep links (pool invite + email confirm). **No image picker, no biometrics in v1.** |
 | **Custom avatar upload** | Deferred — v1 uses the **default avatar set only** (and Google photo when available via OAuth). |
 | **Bundle topology** | **Single Re.Pack bundle, host-only. No Module Federation in v1.** |
-| **Backend** | Reused as-is. No migration of Supabase schema, Prisma, server actions logic, football-data.org sync, or email/push dispatch. |
+| **Backend** | **Own backend in the user's Supabase** (ADR-007): core schema + RLS + Edge Functions, blueprinted on betmeet-clone. Mobile-direct, no Next.js. |
+| **Backend v1 minimum** | Core schema + RLS; Edge Functions for `savePrediction` (locking), pools create/join, basic scoring; **manual match seed**. |
+| **Backend deferred** | Live football-data.org sync, push notifications, transactional email. |
 | **Admin** | Out of scope. |
 
-## v1 Units (mirror of web)
-1. **Auth** — registration, login (email + Google), email verification, password reset, session lifecycle.
+## v1 Units
+**Backend (own Supabase — new):**
+- **B-Schema** — core tables + RLS applied to the user's Supabase (blueprint: betmeet-clone `prisma/schema.prisma`).
+- **B-Functions** — Edge Functions: savePrediction (kickoff lock), pools create/join (capacity/token/atomicity), basic scoring.
+- **B-Seed** — manual seed of World Cup matches/teams.
+
+**Mobile (RN):**
+1. **Auth** — registration, login (email + Google), email verification, password reset, session lifecycle. _(done — Bolt 1)_
 2. **Onboarding** — nickname assignment + default-avatar selection + rules acknowledgement; gates the app shell.
 3. **Matches & Predictions** — view fixture grouped by day, submit/edit predictions before kickoff.
 4. **Pools** — create, discover/join public, join-by-token, view detail, manage membership (leave/kick/delete).
-5. **Leaderboard & Rankings** — global ranking + per-pool leaderboard (read-only; scoring stays server-side).
+5. **Leaderboard & Rankings** — global ranking + per-pool leaderboard (read-only; scoring runs in Edge Functions).
 
-App shell / navigation is a cross-cutting concern of the host, not a unit (see `system-context.md`).
+App shell / navigation is a cross-cutting concern of the host, not a unit (see `system-context.md`). Mobile write bolts (2–4 above) are **blocked until the backend minimum exists**.
 
 ## Functional requirements
 
@@ -72,7 +82,16 @@ App shell / navigation is a cross-cutting concern of the host, not a unit (see `
 ### FR-L — Leaderboard & Rankings (mirrors web "scoring-rankings")
 - **FR-L1** Global ranking (`getGlobalRankingProjection`) listing rank, nickname, avatar, total points; highlight the viewer; show live projection when matches are in progress.
 - **FR-L2** Per-pool leaderboard (`getPoolLeaderboard`) of members ranked by pool points.
-- **FR-L3** Read-only — all scoring (`computeScore`, sweeper) stays server-side; mobile only displays results and refetches on focus.
+- **FR-L3** Read-only on mobile — scoring runs in **Edge Functions** (own backend); mobile only displays results and refetches on focus.
+
+### FR-BK — Backend (own Supabase — new this re-scope)
+- **FR-BK1** Apply core schema to the user's Supabase (blueprint: betmeet-clone `prisma/schema.prisma`, snake_case): `profiles`, `pools`, `pool_memberships`, `matches`, `predictions`, `prediction_scores` (+ supporting enums/indexes for v1).
+- **FR-BK2** RLS policies: authenticated own-row reads (profile, predictions), own+public pools and memberships, matches readable; writes restricted (mutations go through Edge Functions, not direct table writes).
+- **FR-BK3** Edge Function `save-prediction`: validate auth + onboarding, match status/eligibility, **lock at kickoff**, score range, upsert prediction (mirrors web `savePrediction`).
+- **FR-BK4** Edge Functions for pools: `create-pool` (name uniqueness, invite-token gen, atomic owner membership), `join-pool` (public + by-token, capacity, duplicate check). Leave/kick/delete via RLS-guarded writes or functions as needed.
+- **FR-BK5** Basic scoring: compute `prediction_scores` for finished matches (deterministic, mirrors web `computeScore`); invoked on result entry (manual/seed for v1).
+- **FR-BK6** Manual seed of World Cup teams + matches for v1.
+- _Deferred:_ live football-data.org sync, notifications, email.
 
 ## Non-functional requirements
 - **NFR-1 Stack:** RN 0.86 (New Arch), React 19.2, TypeScript strict, **Re.Pack 5 / Rspack only — never Metro.** Single bundle.
@@ -80,23 +99,24 @@ App shell / navigation is a cross-cutting concern of the host, not a unit (see `
 - **NFR-3 Performance:** 60 FPS target; no JS-thread blocking on list scroll; lazy-load heavy screens.
 - **NFR-4 Data layer:** client-side fetching + caching (no SSR/RSC, no `unstable_cache`). A single data-fetching/cache library (e.g. React Query) to be chosen at the first stateful bolt's Design stage; cache invalidated on prediction submit, pool mutations, and screen focus.
 - **NFR-5 Session security:** tokens in encrypted secure storage (Keychain / Keystore via `expo-secure-store` or `react-native-keychain`), never plain AsyncStorage.
-- **NFR-6 Auth transport:** reuse `@supabase/supabase-js` against the existing Supabase project; no backend changes.
+- **NFR-6 Backend transport:** `@supabase/supabase-js` against the **user's own Supabase**; reads via PostgREST+RLS, writes via Edge Functions (`supabase.functions.invoke`). No Next.js server.
 - **NFR-7 i18n:** mirror the web `es`/`en` dictionaries; default `es`. Keep parity with web copy where practical.
 - **NFR-8 Deep linking:** register the `betmeet://` URL scheme (+ associated/app-links later) for email confirm, password reset, and pool join.
 - **NFR-9 Testing:** React Native Testing Library for components/flows; `agent-device` for on-device E2E of auth, deep-link join, and prediction submit.
 
 ## Constraints & assumptions
-- **C1** Backend is frozen for this migration. If a mobile flow needs an endpoint the web exposes only as a server action or RSC query, it must be reachable as an HTTP/PostgREST/Supabase call; gaps are raised, not worked around by editing the backend. _(Open risk — see below.)_
-- **C2** Web Push does not exist on native; since push is deferred to v2, no notification backend change is needed in v1.
-- **C3** Passkeys/MFA exist in the backend but are not surfaced in v1 mobile UI.
-- **A1** The existing Supabase project allows a mobile client (anon key + RLS) to perform the same reads/writes the web does.
+- **C1** The backend is **built in the user's own Supabase** (ADR-007), blueprinted on betmeet-clone. betmeet-clone is a reference, not a runtime dependency. Business logic (locking, capacity, scoring, discriminator) lives in Edge Functions, mirrored from the web server actions.
+- **C2** Push notifications are deferred to v2 — no notification backend in v1.
+- **C3** Passkeys/MFA are not surfaced in v1 mobile UI.
+- **A1** The user's Supabase project allows applying schema/RLS/Edge Functions (it is theirs).
 - **A2** Default avatar assets are served from a URL the mobile app can consume directly.
 
-## Open questions / risks (to resolve during Construction Design)
-- **Q1 (server actions vs HTTP):** The web invokes mutations as Next.js **server actions** (`savePrediction`, `createPool`, `joinPoolByToken`, etc.), not documented REST endpoints. Mobile cannot call server actions. **Need to confirm** each v1 mutation is available via PostgREST/RPC/Supabase, or define the minimal API surface to expose. This is the biggest migration risk and is flagged for the first Pools/Predictions bolt.
-- **Q2 (data lib):** Final choice of data-fetching/cache + state library (React Query vs alternatives) — decide at first stateful bolt.
-- **Q3 (navigation lib):** Native navigator choice (e.g. `@react-navigation/native` native-stack + bottom-tabs) — decide in the App-shell bolt.
-- **Q4 (deep-link domain):** Whether to add Universal Links / App Links (https) in addition to the custom scheme for email links that open from mail apps reliably.
+## Open questions / risks
+- **Q1 — RESOLVED (ADR-007):** mobile cannot call the web's server actions; v1 uses an **own Supabase backend** (RLS reads + Edge Function writes). Backend bolts are inserted before the mobile write bolts.
+- **Q2 (data lib):** RESOLVED in Bolt 0 — TanStack Query + Zustand.
+- **Q3 (navigation lib):** RESOLVED in Bolt 0 — React Navigation v7.
+- **Q4 (deep-link domain):** Universal Links / App Links (https) vs custom scheme — still deferred.
+- **Q5 (backend repo location):** RESOLVED — the `supabase/` project (migrations + Edge Functions) is versioned **in this repo** (`betmeet-mobile-clone/supabase/`).
 
 ## Traceability
 Every story under `units/*/stories/` references one or more FR IDs above; every FR mirrors a web requirement (FR-REFINE-* / unit) noted inline.
