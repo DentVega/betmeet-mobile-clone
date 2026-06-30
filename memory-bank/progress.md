@@ -3,8 +3,8 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction — **Phase B (own backend) complete**; Phase C (mobile features) next
-- **Bolts Completed:** 6 / 9 (Intent 001) — backend (schema/RLS + Edge Functions + seed) authored & validated; **Bolt 6 (Onboarding) next**
+- **Current Phase:** Construction — Phase C (mobile features) in progress
+- **Bolts Completed:** 7 / 9 (Intent 001) — Onboarding done; **Bolt 7 (Matches & Predictions) next**
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -21,7 +21,7 @@
 - **Bolt 4 — Backend: Edge Functions:** `Completed (code ready)` — 4 Deno functions + atomic plpgsql (fn_save_prediction/create_pool/join_pool); scoring ported; validated on ephemeral PG17 (lock/capacity/idempotent/NAME_TAKEN all pass; 1 bug fixed). **User runs `db push` + `functions deploy` + `secrets set ADMIN_SECRET`.** See `bolts/bolt-4-edge-functions/`.
 - **Bolt 5 — Backend: Match seed:** `Completed (SQL ready)` — idempotent dev fixture: 1 competition, 5 phases, 16 teams, 14 matches (3 FINISHED). Validated on PG17. Applies via `db push`. See `bolts/bolt-5-match-seed/`.
 - _Phase C — mobile features (blocked on Phase B):_
-- **Bolt 6 — Onboarding:** `Planned` — US-O1…O4.
+- **Bolt 6 — Onboarding:** `Completed` — wizard (nickname/avatar/rules) + fn_set_nickname + set-nickname Edge Function; gate flips on complete. tsc/jest/bundle green; fn validated on PG17. **User: `db push` + `functions deploy set-nickname`.** See `bolts/bolt-6-onboarding/`.
 - **Bolt 7 — Matches & Predictions:** `Planned` — US-M1…M5.
 - **Bolt 8 — Pools:** `Planned` — US-P1…P6.
 - **Bolt 9 — Leaderboard & Rankings:** `Planned` — US-L1…L3.

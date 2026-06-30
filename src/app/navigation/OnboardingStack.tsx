@@ -1,16 +1,15 @@
 /**
- * Onboarding stack. Placeholder screens in Bolt 0 — real wizard lands in Bolt 3.
+ * Onboarding stack (Bolt 6). Real wizard: Nickname → Avatar → Rules.
+ * Gates the app shell until onboarding_completed flips (ADR-012).
  */
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { OnboardingStackParamList } from './types';
-import { PlaceholderScreen } from '../../ui/Screen';
+import { NicknameScreen } from '../../onboarding/screens/NicknameScreen';
+import { AvatarScreen } from '../../onboarding/screens/AvatarScreen';
+import { RulesScreen } from '../../onboarding/screens/RulesScreen';
 
 const Stack = createNativeStackNavigator<OnboardingStackParamList>();
-
-const NicknameScreen = () => <PlaceholderScreen title="Nickname (Bolt 3)" />;
-const AvatarScreen = () => <PlaceholderScreen title="Avatar (Bolt 3)" />;
-const RulesScreen = () => <PlaceholderScreen title="Rules (Bolt 3)" />;
 
 export function OnboardingStack() {
   return (
