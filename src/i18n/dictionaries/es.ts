@@ -31,6 +31,7 @@ export const es = {
       INTERNAL: 'Algo salió mal. Inténtalo de nuevo.',
     },
   },
+  leaderboard: { empty: 'Aún no hay puntos. Vuelve cuando terminen los partidos.' },
   pools: {
     title: 'Mis ligas',
     create: 'Crear liga',

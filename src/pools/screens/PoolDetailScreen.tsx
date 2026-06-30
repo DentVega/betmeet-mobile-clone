@@ -68,6 +68,12 @@ export function PoolDetailScreen() {
           </View>
         ))}
 
+        <Button
+          title={dict.leaderboard}
+          variant="secondary"
+          onPress={() => nav.navigate('PoolLeaderboard', { poolId })}
+        />
+
         {!!err && <Text style={styles.err}>{err}</Text>}
 
         {isOwner ? (

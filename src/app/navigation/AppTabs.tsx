@@ -15,12 +15,12 @@ import { PoolNewScreen } from '../../pools/screens/PoolNewScreen';
 import { PoolDiscoverScreen } from '../../pools/screens/PoolDiscoverScreen';
 import { PoolDetailScreen } from '../../pools/screens/PoolDetailScreen';
 import { PoolJoinScreen } from '../../pools/screens/PoolJoinScreen';
+import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
+import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboardScreen';
 import { t } from '../../i18n';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
-
-const RankingsScreen = () => <PlaceholderScreen title="Rankings (Bolt 9)" />;
 
 function PoolsStack() {
   return (
@@ -29,6 +29,7 @@ function PoolsStack() {
       <PoolsStackNav.Screen name="PoolNew" component={PoolNewScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolDiscover" component={PoolDiscoverScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolDetail" component={PoolDetailScreen} options={{ title: '' }} />
+      <PoolsStackNav.Screen name="PoolLeaderboard" component={PoolLeaderboardScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolJoin" component={PoolJoinScreen} options={{ title: '' }} />
     </PoolsStackNav.Navigator>
   );

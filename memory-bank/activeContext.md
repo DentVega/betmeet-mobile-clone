@@ -3,7 +3,8 @@
 > **Agent note:** This is your short-term memory. Read it at the start of every session and update it immediately after making an important decision, changing focus, or encountering a blocker.
 
 ## Current Focus
-- **Phase C in progress.** Backend Bolts 3–5 are **deployed & live** in the user's Supabase (7 migrations on remote; 4 Edge Functions active: save-prediction/create-pool/join-pool/compute-score; ADMIN_SECRET set; compute-score smoke returned ok). Bolts 6 (Onboarding), 7 (Matches & Predictions), 8 (Pools) **code complete + validated locally**. **Only Bolt 9 (Leaderboard) left** for v1. Pending activation: `db push` (migrations set_nickname + pool_functions) + `functions deploy set-nickname leave-pool kick-member delete-pool`; native rebuild for FlashList. Backend Bolts 3–5 + create/join/save/compute already live.
+- **🏁 v1 FEATURE-COMPLETE — all 10 bolts (0–9) done, validated locally** (tsc clean, jest 51/51, Rspack bundle green; all SQL/functions exercised on ephemeral PG17). Remaining work is **activation**, not features.
+- Backend: Bolts 3–5 already deployed/live (7 migrations + 4 functions + ADMIN_SECRET). **Pending push/deploy:** migrations set_nickname/pool_functions/ranking_functions + functions set-nickname/leave-pool/kick-member/delete-pool. Native rebuild needed for FlashList. Dashboard: redirect URLs + avatars bucket.
 - Pending dashboard (manual): Auth redirect URLs `betmeet://...` + public `avatars` bucket (for full auth E2E + avatar images).
 - Architecture (ADR-007): own Supabase backend, RLS reads + Edge Function writes, mobile-direct, no Next.js. Blueprint = `../betmeet-clone`.
 - Inception re-scoped: `requirements.md`, `system-context.md`, `bolt-plan.md` updated. New phase order: Phase A (shell/auth/audit) ✅ → **Phase B (backend: schema+RLS → Edge Functions → match seed)** → Phase C (mobile onboarding/predictions/pools/leaderboard, blocked on B).
@@ -20,5 +21,5 @@
 - **TOP RISK:** web mutations are Next.js **server actions**, not callable from mobile. Bolt 2 (Write-Path Audit) must map each v1 write to Supabase SDK / PostgREST+RLS / needs-a-thin-endpoint, and surface any backend exception to the user. Gates Onboarding/Predictions/Pools.
 
 ## Immediate Next Step
-- **`/bolt-start` for Bolt 9 — Leaderboard & Rankings** (final v1 bolt): global ranking + per-pool leaderboard from scoring output; wire the PoolDetail "leaderboard" link + Rankings tab.
-- **Activation backlog:** `db push` (set_nickname + pool_functions) + `functions deploy set-nickname leave-pool kick-member delete-pool`; native rebuild for FlashList (`pod install` + run); dashboard: `betmeet://` redirect URLs + public `avatars` bucket. (Backend Bolts 3–5 + ADMIN_SECRET already live.)
+- **Activate v1** (see progress.md "Activation checklist"): `supabase db push`; `supabase functions deploy set-nickname leave-pool kick-member delete-pool`; `pod install` + native rebuild (FlashList); dashboard redirect URLs + `avatars` bucket; optionally `compute-score` on the 3 FINISHED seeded matches.
+- Then **device E2E** (agent-device): signup→verify→onboarding→predict→pool join (deep link)→leaderboard. After that, candidate v2 work: live projection, custom avatar upload, push, Passkeys/MFA, Settings, Admin, directed invites.
