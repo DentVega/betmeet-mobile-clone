@@ -4,7 +4,7 @@
 
 ## Current Focus
 - **🏁 v1 FEATURE-COMPLETE — all 10 bolts (0–9) done, validated locally** (tsc clean, jest 51/51, Rspack bundle green; all SQL/functions exercised on ephemeral PG17). Remaining work is **activation**, not features.
-- Backend: Bolts 3–5 already deployed/live (7 migrations + 4 functions + ADMIN_SECRET). **Pending push/deploy:** migrations set_nickname/pool_functions/ranking_functions + functions set-nickname/leave-pool/kick-member/delete-pool. Native rebuild needed for FlashList. Dashboard: redirect URLs + avatars bucket.
+- **Backend FULLY DEPLOYED** to the user's Supabase (verified): 10/10 migrations applied, 8/8 Edge Functions ACTIVE, ADMIN_SECRET set. Remaining = client-side activation only: **native rebuild for FlashList** (`pod install` + run) and **dashboard config** (Auth redirect URLs `betmeet://…` + public `avatars` bucket). Then device E2E.
 - Pending dashboard (manual): Auth redirect URLs `betmeet://...` + public `avatars` bucket (for full auth E2E + avatar images).
 - Architecture (ADR-007): own Supabase backend, RLS reads + Edge Function writes, mobile-direct, no Next.js. Blueprint = `../betmeet-clone`.
 - Inception re-scoped: `requirements.md`, `system-context.md`, `bolt-plan.md` updated. New phase order: Phase A (shell/auth/audit) ✅ → **Phase B (backend: schema+RLS → Edge Functions → match seed)** → Phase C (mobile onboarding/predictions/pools/leaderboard, blocked on B).

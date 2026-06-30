@@ -3,7 +3,7 @@
  * dictionary. Keep in sync with en.ts (i18n-doc-sync).
  */
 export const es = {
-  common: { loading: 'Cargando…', retry: 'Reintentar', back: 'Atrás' },
+  common: { loading: 'Cargando…', retry: 'Reintentar', back: 'Atrás', show: 'Mostrar', hide: 'Ocultar' },
   shell: { signOut: 'Cerrar sesión' },
   tabs: { matches: 'Partidos', pools: 'Ligas', rankings: 'Clasificación' },
   placeholder: { comingSoon: 'Próximamente' },

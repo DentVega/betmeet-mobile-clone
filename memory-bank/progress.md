@@ -7,11 +7,11 @@
 - **Bolts Completed:** 10 / 10 (Intent 001). Remaining = activation (apply to live Supabase + native rebuild) + device E2E, not new features.
 
 ## Activation checklist (to run the full app)
-1. `supabase db push` — applies all 10 migrations (schema, RLS, triggers, all fns, seed). _(Bolts 3–5 already pushed; this adds set_nickname, pool_functions, ranking_functions.)_
-2. `supabase functions deploy set-nickname leave-pool kick-member delete-pool` _(save-prediction/create-pool/join-pool/compute-score already live)_.
-3. Native rebuild for FlashList: `bundle exec pod install --project-directory=ios` + `npm run android`/`ios`.
-4. Dashboard: Auth redirect URLs `betmeet://auth/{callback,reset,confirm}` + public `avatars` bucket (upload defaults/01–06.png).
-5. (Optional) invoke `compute-score` on the 3 seeded FINISHED matches to populate scores/leaderboard.
+1. ✅ DONE — `supabase db push`: all **10/10 migrations** applied to remote.
+2. ✅ DONE — `functions deploy`: all **8/8 Edge Functions** ACTIVE; ADMIN_SECRET set.
+3. ⬜ Native rebuild for FlashList: `bundle exec pod install --project-directory=ios` + `npm run android`/`ios`.
+4. ⬜ Dashboard: Auth redirect URLs `betmeet://auth/{callback,reset,confirm}` + public `avatars` bucket (upload defaults/01–06.png).
+5. ⬜ (Optional) invoke `compute-score` on the 3 seeded FINISHED matches to populate scores/leaderboard.
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
