@@ -12,7 +12,7 @@ import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
 import { Screen } from '../../ui/Screen';
 import { t, tr } from '../../i18n';
-import { authStyles as s } from './styles';
+import { useAuthStyles } from './styles';
 
 type Nav = NativeStackNavigationProp<AuthStackParamList, 'ResetPassword'>;
 type Route = RouteProp<AuthStackParamList, 'ResetPassword'>;
@@ -23,6 +23,7 @@ export function ResetPasswordScreen() {
   const route = useRoute<Route>();
   const tokenHash = route.params?.tokenHash;
   const dict = t();
+  const s = useAuthStyles();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const {

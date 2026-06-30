@@ -13,7 +13,7 @@ import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
 import { Screen } from '../../ui/Screen';
 import { t, tr } from '../../i18n';
-import { authStyles as s } from './styles';
+import { useAuthStyles } from './styles';
 
 type Nav = NativeStackNavigationProp<AuthStackParamList, 'SignIn'>;
 const fe = (m?: string) => (m ? tr(m) : undefined);
@@ -21,6 +21,7 @@ const fe = (m?: string) => (m ? tr(m) : undefined);
 export function SignInScreen() {
   const navigation = useNavigation<Nav>();
   const dict = t();
+  const s = useAuthStyles();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const {

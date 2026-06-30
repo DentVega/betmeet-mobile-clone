@@ -10,7 +10,7 @@ import { authService } from '../authService';
 import { Button } from '../../ui/Button';
 import { Screen } from '../../ui/Screen';
 import { t, tr } from '../../i18n';
-import { authStyles as s } from './styles';
+import { useAuthStyles } from './styles';
 
 type Route = RouteProp<AuthStackParamList, 'VerifyEmail'>;
 
@@ -18,6 +18,7 @@ export function VerifyEmailScreen() {
   const route = useRoute<Route>();
   const { tokenHash, type, email } = route.params ?? {};
   const dict = t();
+  const s = useAuthStyles();
   const [status, setStatus] = useState<'idle' | 'verifying' | 'verified' | 'error'>(
     tokenHash ? 'verifying' : 'idle',
   );

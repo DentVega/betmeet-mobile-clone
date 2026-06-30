@@ -9,6 +9,7 @@ import { todayKey, isPastDay, type FixtureMatch } from '../data/fixture';
 import { MatchCard } from '../components/MatchCard';
 import { PredictionForm } from '../components/PredictionForm';
 import { t } from '../../i18n';
+import { useTheme } from '../../theme/useTheme';
 
 type Row =
   | { type: 'header'; key: string; label: string }
@@ -18,6 +19,7 @@ const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export function MatchesScreen() {
   const dict = t().matches;
+  const { colors } = useTheme();
   const { data: days, isLoading, refetch } = useFixture();
   const [showPast, setShowPast] = useState(false);
   const [selected, setSelected] = useState<FixtureMatch | null>(null);
@@ -44,11 +46,11 @@ export function MatchesScreen() {
   const renderItem = useCallback(
     ({ item }: { item: Row }) =>
       item.type === 'header' ? (
-        <Text style={styles.header}>{item.label}</Text>
+        <Text style={[styles.header, { color: colors.mutedForeground }]}>{item.label}</Text>
       ) : (
         <MatchCard match={item.match} onPredict={setSelected} />
       ),
-    [],
+    [colors],
   );
 
   if (isLoading) return <BootingScreen />;
@@ -57,7 +59,7 @@ export function MatchesScreen() {
     <Screen>
       {hasPast && (
         <Pressable onPress={() => setShowPast((v) => !v)} style={styles.toggle}>
-          <Text style={styles.toggleText}>{showPast ? dict.hidePast : dict.showPast}</Text>
+          <Text style={[styles.toggleText, { color: colors.primary }]}>{showPast ? dict.hidePast : dict.showPast}</Text>
         </Pressable>
       )}
       <FlashList
