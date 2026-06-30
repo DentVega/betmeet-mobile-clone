@@ -9,13 +9,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { AppTabsParamList, PoolsStackParamList } from './types';
 import { PlaceholderScreen } from '../../ui/Screen';
 import { SignOutButton } from '../../auth/SignOutButton';
+import { MatchesScreen } from '../../matches/screens/MatchesScreen';
 import { t } from '../../i18n';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
 
-const MatchesScreen = () => <PlaceholderScreen title="Matches (Bolt 4)" />;
-const RankingsScreen = () => <PlaceholderScreen title="Rankings (Bolt 6)" />;
+const RankingsScreen = () => <PlaceholderScreen title="Rankings (Bolt 9)" />;
 const PoolsListScreen = () => <PlaceholderScreen title="Pools (Bolt 5)" />;
 const PoolJoinScreen = () => <PlaceholderScreen title="Join pool (Bolt 5)" />;
 

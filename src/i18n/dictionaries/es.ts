@@ -7,6 +7,30 @@ export const es = {
   shell: { signOut: 'Cerrar sesión' },
   tabs: { matches: 'Partidos', pools: 'Ligas', rankings: 'Clasificación' },
   placeholder: { comingSoon: 'Próximamente' },
+  matches: {
+    tbd: 'Por definir',
+    showPast: 'Ver días anteriores',
+    hidePast: 'Ocultar días anteriores',
+    predict: 'Predecir',
+    edit: 'Editar predicción',
+    yourPick: 'Tu predicción',
+    points: 'pts',
+    penaltyWinner: 'Ganador en penales',
+    save: 'Guardar',
+    cancel: 'Cancelar',
+    vs: 'vs',
+    statuses: {
+      SCHEDULED: 'Programado', LOCKED: 'Bloqueado', LIVE: 'En vivo',
+      FINISHED: 'Finalizado', POSTPONED: 'Aplazado', CANCELLED: 'Cancelado',
+    },
+    errors: {
+      LOCKED: 'El partido ya empezó; no puedes editar.',
+      INVALID: 'Predicción no válida.',
+      NOT_ONBOARDED: 'Completa tu perfil primero.',
+      NOT_MEMBER: 'No eres miembro de esta liga.',
+      INTERNAL: 'Algo salió mal. Inténtalo de nuevo.',
+    },
+  },
   onboarding: {
     nickname: {
       title: 'Elige tu apodo',

@@ -6,6 +6,30 @@ export const en: Dictionary = {
   shell: { signOut: 'Sign out' },
   tabs: { matches: 'Matches', pools: 'Pools', rankings: 'Rankings' },
   placeholder: { comingSoon: 'Coming soon' },
+  matches: {
+    tbd: 'To be decided',
+    showPast: 'Show earlier days',
+    hidePast: 'Hide earlier days',
+    predict: 'Predict',
+    edit: 'Edit prediction',
+    yourPick: 'Your prediction',
+    points: 'pts',
+    penaltyWinner: 'Penalty winner',
+    save: 'Save',
+    cancel: 'Cancel',
+    vs: 'vs',
+    statuses: {
+      SCHEDULED: 'Scheduled', LOCKED: 'Locked', LIVE: 'Live',
+      FINISHED: 'Finished', POSTPONED: 'Postponed', CANCELLED: 'Cancelled',
+    },
+    errors: {
+      LOCKED: 'The match has started; you can’t edit.',
+      INVALID: 'Invalid prediction.',
+      NOT_ONBOARDED: 'Complete your profile first.',
+      NOT_MEMBER: 'You are not a member of this pool.',
+      INTERNAL: 'Something went wrong. Please try again.',
+    },
+  },
   onboarding: {
     nickname: {
       title: 'Choose your nickname',
