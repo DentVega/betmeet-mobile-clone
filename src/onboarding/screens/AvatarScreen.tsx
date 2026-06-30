@@ -10,13 +10,14 @@ import { t } from '../../i18n';
 import { useSessionStore } from '../../session/sessionStore';
 import { useAvatarAssets } from '../data/useAvatarAssets';
 import { setAvatar } from '../data/onboardingApi';
-import { obStyles as s } from './styles';
+import { useObStyles } from './styles';
 
 type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'Avatar'>;
 
 export function AvatarScreen() {
   const navigation = useNavigation<Nav>();
   const dict = t().onboarding.avatar;
+  const s = useObStyles();
   const userId = useSessionStore((st) => st.userId);
   const { data: assets, isLoading } = useAvatarAssets();
   const [selected, setSelected] = useState<string | null>(null);

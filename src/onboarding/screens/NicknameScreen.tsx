@@ -9,7 +9,7 @@ import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
 import { t, tr } from '../../i18n';
 import { setNickname } from '../data/onboardingApi';
-import { obStyles as s } from './styles';
+import { useObStyles } from './styles';
 
 type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'Nickname'>;
 const NICK_RE = /^[A-Za-z0-9_-]{3,20}$/;
@@ -17,6 +17,7 @@ const NICK_RE = /^[A-Za-z0-9_-]{3,20}$/;
 export function NicknameScreen() {
   const navigation = useNavigation<Nav>();
   const dict = t().onboarding.nickname;
+  const s = useObStyles();
   const [base, setBase] = useState('');
   const [assigned, setAssigned] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

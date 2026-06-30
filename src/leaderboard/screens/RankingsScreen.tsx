@@ -1,9 +1,10 @@
 /** Rankings tab — global leaderboard (US-L1). */
 import React, { useCallback } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useFocusEffect } from '@react-navigation/native';
 import { Screen, BootingScreen } from '../../ui/Screen';
+import { Txt } from '../../ui/Text';
 import { useSessionStore } from '../../session/sessionStore';
 import { useGlobalRanking, type RankRow as Row } from '../data/useRankings';
 import { RankRow } from '../components/RankRow';
@@ -23,7 +24,7 @@ export function RankingsScreen() {
   if ((data ?? []).length === 0) {
     return (
       <Screen>
-        <Text style={styles.empty}>{t().leaderboard.empty}</Text>
+        <Txt variant="muted" style={styles.empty}>{t().leaderboard.empty}</Txt>
       </Screen>
     );
   }
@@ -35,5 +36,5 @@ export function RankingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  empty: { textAlign: 'center', color: '#6b7280', marginTop: 40, paddingHorizontal: 24 },
+  empty: { textAlign: 'center', marginTop: 40, paddingHorizontal: 24 },
 });

@@ -1,8 +1,9 @@
 /** Per-pool leaderboard (US-L2), reached from PoolDetail. */
 import React, { useCallback } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useRoute, type RouteProp } from '@react-navigation/native';
+import { Txt } from '../../ui/Text';
 import type { PoolsStackParamList } from '../../app/navigation/types';
 import { Screen, BootingScreen } from '../../ui/Screen';
 import { useSessionStore } from '../../session/sessionStore';
@@ -26,7 +27,7 @@ export function PoolLeaderboardScreen() {
   if ((data ?? []).length === 0) {
     return (
       <Screen>
-        <Text style={styles.empty}>{t().leaderboard.empty}</Text>
+        <Txt variant="muted" style={styles.empty}>{t().leaderboard.empty}</Txt>
       </Screen>
     );
   }
@@ -38,5 +39,5 @@ export function PoolLeaderboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  empty: { textAlign: 'center', color: '#6b7280', marginTop: 40, paddingHorizontal: 24 },
+  empty: { textAlign: 'center', marginTop: 40, paddingHorizontal: 24 },
 });

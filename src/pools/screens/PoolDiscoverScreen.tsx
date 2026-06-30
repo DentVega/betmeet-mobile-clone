@@ -1,6 +1,6 @@
-/** Discover + join public pools (US-P3). */
+/** Discover + join public pools (US-P3), themed. */
 import React, { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,6 +9,9 @@ import type { PoolsStackParamList } from '../../app/navigation/types';
 import { Screen } from '../../ui/Screen';
 import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
+import { Card } from '../../ui/Card';
+import { Txt } from '../../ui/Text';
+import { useTheme } from '../../theme/useTheme';
 import { useDiscover, type DiscoverPool } from '../data/usePools';
 import { joinPoolById } from '../data/poolsApi';
 import { t, tr } from '../../i18n';
@@ -19,6 +22,7 @@ export function PoolDiscoverScreen() {
   const nav = useNavigation<Nav>();
   const qc = useQueryClient();
   const dict = t().pools;
+  const { colors } = useTheme();
   const [query, setQuery] = useState('');
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
@@ -43,19 +47,21 @@ export function PoolDiscoverScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: DiscoverPool }) => (
-      <View style={styles.card}>
-        <View style={styles.flex}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.meta}>{item.member_count}/{item.capacity} {dict.members}</Text>
-        </View>
-        {item.is_member ? (
-          <Text style={styles.joined}>{dict.joined}</Text>
-        ) : (
-          <Button title={dict.join} onPress={() => onJoin(item)} loading={busy === item.id} />
-        )}
+      <View style={styles.cardWrap}>
+        <Card style={styles.card}>
+          <View style={styles.flex}>
+            <Txt variant="title">{item.name}</Txt>
+            <Txt variant="muted" style={styles.meta}>{item.member_count}/{item.capacity} {dict.members}</Txt>
+          </View>
+          {item.is_member ? (
+            <Txt color={colors.success} style={styles.joined}>{dict.joined}</Txt>
+          ) : (
+            <Button title={dict.join} onPress={() => onJoin(item)} loading={busy === item.id} />
+          )}
+        </Card>
       </View>
     ),
-    [dict, onJoin, busy],
+    [dict, onJoin, busy, colors],
   );
 
   return (
@@ -63,9 +69,11 @@ export function PoolDiscoverScreen() {
       <View style={styles.head}>
         <TextField label={dict.searchPlaceholder} value={query} onChangeText={setQuery} />
         <Pressable onPress={() => setOnlyOpen((v) => !v)} style={styles.toggle}>
-          <Text style={[styles.toggleText, onlyOpen && styles.toggleOn]}>{dict.onlyOpen} {onlyOpen ? '✓' : ''}</Text>
+          <Txt color={onlyOpen ? colors.primary : colors.mutedForeground} style={styles.toggleText}>
+            {dict.onlyOpen} {onlyOpen ? '✓' : ''}
+          </Txt>
         </Pressable>
-        {!!err && <Text style={styles.err}>{err}</Text>}
+        {!!err && <Txt color={colors.destructive}>{err}</Txt>}
       </View>
       <FlashList data={data ?? []} renderItem={renderItem} keyExtractor={(i) => i.id} />
     </Screen>
@@ -75,12 +83,10 @@ export function PoolDiscoverScreen() {
 const styles = StyleSheet.create({
   head: { paddingHorizontal: 16, paddingTop: 12 },
   toggle: { paddingVertical: 6 },
-  toggleText: { color: '#6b7280', fontWeight: '600' },
-  toggleOn: { color: '#2563eb' },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#fff', borderRadius: 10, padding: 14, marginHorizontal: 16, marginVertical: 6, borderWidth: 1, borderColor: '#eee' },
+  toggleText: { fontWeight: '600' },
+  cardWrap: { marginHorizontal: 16, marginVertical: 6 },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   flex: { flex: 1 },
-  name: { fontSize: 16, fontWeight: '700', color: '#111' },
-  meta: { fontSize: 13, color: '#6b7280', marginTop: 2 },
-  joined: { color: '#15803d', fontWeight: '600' },
-  err: { color: '#dc2626', fontSize: 14 },
+  meta: { marginTop: 2 },
+  joined: { fontWeight: '600' },
 });

@@ -1,10 +1,12 @@
-/** Modal to submit/edit a prediction (US-M3). Penalty picker only on knockout draw. */
+/** Modal to submit/edit a prediction (US-M3), themed. Penalty picker only on knockout draw. */
 import React, { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FixtureMatch } from '../data/fixture';
 import { savePrediction } from '../data/fixtureApi';
 import { Button } from '../../ui/Button';
+import { Txt } from '../../ui/Text';
+import { useTheme } from '../../theme/useTheme';
 import { t, tr } from '../../i18n';
 
 function clampScore(v: string): number {
@@ -12,31 +14,9 @@ function clampScore(v: string): number {
   return Math.max(0, Math.min(20, Number.isNaN(n) ? 0 : n));
 }
 
-function ScoreInput({ value, onChange, label }: { value: string; onChange: (v: string) => void; label: string }) {
-  return (
-    <View style={styles.scoreCol}>
-      <Text style={styles.scoreLabel}>{label}</Text>
-      <TextInput
-        style={styles.scoreInput}
-        value={value}
-        onChangeText={onChange}
-        keyboardType="number-pad"
-        maxLength={2}
-      />
-    </View>
-  );
-}
-
-function PenBtn({ active, label, onPress }: { active: boolean; label: string; onPress: () => void }) {
-  return (
-    <Pressable onPress={onPress} style={[styles.pen, active && styles.penActive]}>
-      <Text style={[styles.penText, active && styles.penTextActive]}>{label}</Text>
-    </Pressable>
-  );
-}
-
 export function PredictionForm({ match, onClose }: { match: FixtureMatch; onClose: () => void }) {
   const dict = t().matches;
+  const { colors, radius } = useTheme();
   const qc = useQueryClient();
   const [home, setHome] = useState(String(match.prediction?.homeScore ?? 0));
   const [away, setAway] = useState(String(match.prediction?.awayScore ?? 0));
@@ -66,28 +46,51 @@ export function PredictionForm({ match, onClose }: { match: FixtureMatch; onClos
     }
   };
 
+  const scoreInput = [
+    styles.scoreInput,
+    { borderColor: colors.input, color: colors.foreground, borderRadius: radius.md, backgroundColor: colors.background },
+  ];
+
   return (
     <Modal transparent animationType="slide" visible onRequestClose={onClose}>
       <View style={styles.backdrop}>
-        <View style={styles.sheet}>
-          <Text style={styles.title}>
+        <View style={[styles.sheet, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Txt variant="title" style={styles.title}>
             {match.homeTeam?.name} {dict.vs} {match.awayTeam?.name}
-          </Text>
+          </Txt>
           <View style={styles.scores}>
-            <ScoreInput value={home} onChange={setHome} label={match.homeTeam?.fifaCode ?? ''} />
-            <Text style={styles.dash}>—</Text>
-            <ScoreInput value={away} onChange={setAway} label={match.awayTeam?.fifaCode ?? ''} />
+            <View style={styles.scoreCol}>
+              <Txt variant="muted" style={styles.scoreLabel}>{match.homeTeam?.fifaCode ?? ''}</Txt>
+              <TextInput style={scoreInput} value={home} onChangeText={setHome} keyboardType="number-pad" maxLength={2} />
+            </View>
+            <Txt variant="heading" color={colors.mutedForeground} style={styles.dash}>—</Txt>
+            <View style={styles.scoreCol}>
+              <Txt variant="muted" style={styles.scoreLabel}>{match.awayTeam?.fifaCode ?? ''}</Txt>
+              <TextInput style={scoreInput} value={away} onChangeText={setAway} keyboardType="number-pad" maxLength={2} />
+            </View>
           </View>
           {knockoutDraw && match.homeTeam && match.awayTeam && (
             <View>
-              <Text style={styles.penLabel}>{dict.penaltyWinner}</Text>
+              <Txt variant="muted" style={styles.penLabel}>{dict.penaltyWinner}</Txt>
               <View style={styles.penRow}>
-                <PenBtn active={pen === match.homeTeam.id} label={match.homeTeam.fifaCode} onPress={() => setPen(match.homeTeam!.id)} />
-                <PenBtn active={pen === match.awayTeam.id} label={match.awayTeam.fifaCode} onPress={() => setPen(match.awayTeam!.id)} />
+                {[match.homeTeam, match.awayTeam].map((tm) => {
+                  const active = pen === tm.id;
+                  return (
+                    <Pressable
+                      key={tm.id}
+                      onPress={() => setPen(tm.id)}
+                      style={[
+                        styles.pen,
+                        { borderColor: active ? colors.primary : colors.border, backgroundColor: active ? colors.accent : 'transparent', borderRadius: radius.md },
+                      ]}>
+                      <Text style={{ color: active ? colors.primary : colors.foreground, fontWeight: '600', fontSize: 16 }}>{tm.fifaCode}</Text>
+                    </Pressable>
+                  );
+                })}
               </View>
             </View>
           )}
-          {!!err && <Text style={styles.err}>{err}</Text>}
+          {!!err && <Txt color={colors.destructive} style={styles.err}>{err}</Txt>}
           <Button title={dict.save} onPress={onSave} loading={loading} disabled={knockoutDraw && !pen} />
           <Button title={dict.cancel} variant="secondary" onPress={onClose} />
         </View>
@@ -97,19 +100,16 @@ export function PredictionForm({ match, onClose }: { match: FixtureMatch; onClos
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
-  sheet: { backgroundColor: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: 24 },
-  title: { fontSize: 18, fontWeight: '700', color: '#111', textAlign: 'center', marginBottom: 20 },
+  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+  sheet: { borderTopLeftRadius: 16, borderTopRightRadius: 16, borderWidth: 1, padding: 24 },
+  title: { textAlign: 'center', marginBottom: 20 },
   scores: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: 16 },
   scoreCol: { alignItems: 'center' },
-  scoreLabel: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 6 },
-  scoreInput: { borderWidth: 1, borderColor: '#d1d5db', borderRadius: 8, width: 64, height: 56, fontSize: 24, textAlign: 'center', color: '#111' },
-  dash: { fontSize: 24, color: '#9ca3af', marginBottom: 12 },
-  penLabel: { fontSize: 14, fontWeight: '600', color: '#374151', marginTop: 20, marginBottom: 8, textAlign: 'center' },
+  scoreLabel: { marginBottom: 6, fontWeight: '600' },
+  scoreInput: { borderWidth: 1, width: 64, height: 56, fontSize: 24, textAlign: 'center' },
+  dash: { marginBottom: 12 },
+  penLabel: { marginTop: 20, marginBottom: 8, textAlign: 'center', fontWeight: '600' },
   penRow: { flexDirection: 'row', gap: 12, justifyContent: 'center' },
-  pen: { borderWidth: 1, borderColor: '#d1d5db', borderRadius: 8, paddingVertical: 10, paddingHorizontal: 20 },
-  penActive: { borderColor: '#2563eb', backgroundColor: '#eff6ff' },
-  penText: { fontSize: 16, color: '#111', fontWeight: '600' },
-  penTextActive: { color: '#2563eb' },
-  err: { color: '#dc2626', fontSize: 14, textAlign: 'center', marginTop: 12 },
+  pen: { borderWidth: 1, paddingVertical: 10, paddingHorizontal: 20 },
+  err: { textAlign: 'center', marginTop: 12 },
 });
