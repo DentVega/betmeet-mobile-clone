@@ -37,3 +37,17 @@ enable_signup = true
 [auth.email]
 enable_signup = true
 enable_confirmations = true
+
+# Edge Functions (Bolt 4). compute-score is a maintenance op guarded by an
+# x-admin-secret header instead of a user JWT.
+[functions.save-prediction]
+verify_jwt = true
+
+[functions.create-pool]
+verify_jwt = true
+
+[functions.join-pool]
+verify_jwt = true
+
+[functions.compute-score]
+verify_jwt = false
