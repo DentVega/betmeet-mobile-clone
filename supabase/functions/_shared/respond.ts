@@ -23,6 +23,7 @@ const KNOWN_CODES = [
   'NOT_FOUND',
   'FULL',
   'NAME_TAKEN',
+  'NICKNAME_TAKEN',
 ];
 
 export interface MappedError {

@@ -6,6 +6,26 @@ export const en: Dictionary = {
   shell: { signOut: 'Sign out' },
   tabs: { matches: 'Matches', pools: 'Pools', rankings: 'Rankings' },
   placeholder: { comingSoon: 'Coming soon' },
+  onboarding: {
+    nickname: {
+      title: 'Choose your nickname',
+      label: 'Nickname',
+      help: '3–20 chars: letters, numbers, hyphen or underscore.',
+      assigned: 'Your nickname will be:',
+      submit: 'Continue',
+    },
+    avatar: { title: 'Choose your avatar', google: 'Google photo', submit: 'Continue' },
+    rules: {
+      title: 'How to play',
+      body: 'Predict each match score before kickoff. Exact scores earn more; in knockout draws, call the penalty winner for a bonus.',
+      acknowledge: "Got it, let's play!",
+    },
+    errors: {
+      INVALID: 'Invalid nickname (3–20, letters/numbers/_-).',
+      NICKNAME_TAKEN: 'That nickname is full, try another.',
+      INTERNAL: 'Something went wrong. Please try again.',
+    },
+  },
   auth: {
     emailLabel: 'Email',
     passwordLabel: 'Password',

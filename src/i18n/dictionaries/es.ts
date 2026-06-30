@@ -7,6 +7,26 @@ export const es = {
   shell: { signOut: 'Cerrar sesión' },
   tabs: { matches: 'Partidos', pools: 'Ligas', rankings: 'Clasificación' },
   placeholder: { comingSoon: 'Próximamente' },
+  onboarding: {
+    nickname: {
+      title: 'Elige tu apodo',
+      label: 'Apodo',
+      help: '3–20 caracteres: letras, números, guion o guion bajo.',
+      assigned: 'Tu apodo será:',
+      submit: 'Continuar',
+    },
+    avatar: { title: 'Elige tu avatar', google: 'Foto de Google', submit: 'Continuar' },
+    rules: {
+      title: 'Cómo se juega',
+      body: 'Predice el marcador de cada partido antes del inicio. Aciertos exactos suman más; en eliminatorias con empate, acierta el ganador de penales para un bonus.',
+      acknowledge: 'Entendido, ¡a jugar!',
+    },
+    errors: {
+      INVALID: 'Apodo no válido (3–20, letras/números/_-).',
+      NICKNAME_TAKEN: 'Ese apodo está completo, prueba otro.',
+      INTERNAL: 'Algo salió mal. Inténtalo de nuevo.',
+    },
+  },
   auth: {
     emailLabel: 'Correo electrónico',
     passwordLabel: 'Contraseña',

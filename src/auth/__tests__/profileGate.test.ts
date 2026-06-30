@@ -15,7 +15,7 @@ function mockResult(result: { data: unknown; error: unknown }) {
 
 describe('fetchOnboardingCompleted', () => {
   it('returns true when the flag is set', async () => {
-    mockResult({ data: { onboardingCompleted: true }, error: null });
+    mockResult({ data: { onboarding_completed: true }, error: null });
     await expect(fetchOnboardingCompleted('u1')).resolves.toBe(true);
   });
 
