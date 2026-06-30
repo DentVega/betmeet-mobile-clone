@@ -3,8 +3,8 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction — Phase C (mobile features) in progress
-- **Bolts Completed:** 8 / 9 (Intent 001) — Matches & Predictions done; **Bolt 8 (Pools) next**, then Bolt 9 (Leaderboard)
+- **Current Phase:** Construction — Phase C (mobile features) — **only Bolt 9 left**
+- **Bolts Completed:** 9 / 10 (Intent 001; bolts 0–8 done) — Pools done; **Bolt 9 (Leaderboard) is the final v1 bolt**
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -23,7 +23,7 @@
 - _Phase C — mobile features (blocked on Phase B):_
 - **Bolt 6 — Onboarding:** `Completed` — wizard (nickname/avatar/rules) + fn_set_nickname + set-nickname Edge Function; gate flips on complete. tsc/jest/bundle green; fn validated on PG17. **User: `db push` + `functions deploy set-nickname`.** See `bolts/bolt-6-onboarding/`.
 - **Bolt 7 — Matches & Predictions:** `Completed` — Matches tab (FlashList day-grouped) + PredictionForm via save-prediction; fixture.ts pure (group/past/canEdit). tsc/jest 51 ✓/bundle green. **FlashList native → rebuild.** See `bolts/bolt-7-predictions/`.
-- **Bolt 8 — Pools:** `Planned` — US-P1…P6.
+- **Bolt 8 — Pools:** `Completed` — 5 screens (list/new/discover/detail/join) + leave/kick/delete fns + fn_discover_pools RPC + deep-link join. tsc/jest 51/bundle green; fns validated on PG17. **User: `db push` + `functions deploy leave-pool kick-member delete-pool`.** See `bolts/bolt-8-pools/`.
 - **Bolt 9 — Leaderboard & Rankings:** `Planned` — US-L1…L3.
 
 ## Deferred or Blocked Tasks

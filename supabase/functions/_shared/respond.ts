@@ -24,6 +24,8 @@ const KNOWN_CODES = [
   'FULL',
   'NAME_TAKEN',
   'NICKNAME_TAKEN',
+  'OWNER_CANNOT_LEAVE',
+  'NOT_OWNER',
 ];
 
 export interface MappedError {
