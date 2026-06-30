@@ -15,8 +15,10 @@
 ## Verified
 tsc clean; jest 51/51; Rspack bundle green (~5.5 MB w/ inlined SVGs); on-device screenshots confirm deportivo theme on Auth + Matches + tabs and flags rendering per match.
 
+## Fonts (done — follow-up completed)
+Embedded **Barlow Semi Condensed** (display/headings) + **Geist** (sans/body): static TTFs in `assets/fonts/` (Geist Regular/Medium/SemiBold/Bold from vercel/geist-font; Barlow SemiBold/Bold/ExtraBold from google/fonts), linked via `react-native-asset` (`react-native.config.js` assets), exposed in `theme/tokens.ts` `fonts`, and applied in Txt/Button/TextField/auth+onboarding titles/AppTabs. Android rebuilt + verified. iOS: react-native-asset added the Info.plist entries; needs `pod install` + iOS build to take effect.
+
 ## Carried forward / follow-ups
-- **Fonts**: Barlow (display) / Geist (sans) not embedded — system fallback with matching weights. Embedding (.ttf + link) is a separate follow-up.
 - **iOS**: needs `pod install` to link react-native-svg before an iOS build.
 - Missing flags (Nigeria, Costa Rica) — add SVGs when available.
 - The other 2 brand themes (moderno/premium) + a theme switcher — only deportivo ported.

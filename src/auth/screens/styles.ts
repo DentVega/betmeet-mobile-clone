@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/useTheme';
+import { fonts } from '../../theme/tokens';
 
 /** Themed shared styles for the auth screens. */
 export function useAuthStyles() {
@@ -7,8 +8,8 @@ export function useAuthStyles() {
   return StyleSheet.create({
     content: { padding: 24, flexGrow: 1, justifyContent: 'center' },
     title: {
-      fontSize: 28,
-      fontWeight: '800',
+      fontSize: 30,
+      fontFamily: fonts.display,
       letterSpacing: -0.3,
       color: colors.foreground,
       marginBottom: 24,

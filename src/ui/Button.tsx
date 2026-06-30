@@ -2,6 +2,7 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../theme/useTheme';
+import { fonts } from '../theme/tokens';
 
 interface ButtonProps {
   title: string;
@@ -50,5 +51,5 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.85 },
   content: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   spinner: { marginRight: 8 },
-  text: { fontSize: 16, fontWeight: '700', textAlign: 'center', letterSpacing: -0.2 },
+  text: { fontSize: 16, fontFamily: fonts.sansSemibold, textAlign: 'center', letterSpacing: -0.2 },
 });

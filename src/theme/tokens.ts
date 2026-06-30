@@ -93,6 +93,18 @@ export const radius = { sm: 6, md: 8, lg: 10, xl: 14, full: 9999 } as const;
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as const;
 
+// Embedded font families (assets/fonts, linked via react-native-asset).
+// Android resolves by filename; iOS by PostScript name (same here).
+export const fonts = {
+  display: 'BarlowSemiCondensed-ExtraBold', // headings / score numerals (signature)
+  displayBold: 'BarlowSemiCondensed-Bold',
+  displaySemibold: 'BarlowSemiCondensed-SemiBold',
+  sans: 'Geist-Regular',
+  sansMedium: 'Geist-Medium',
+  sansSemibold: 'Geist-SemiBold',
+  sansBold: 'Geist-Bold',
+} as const;
+
 // font-display (Barlow Semi Condensed) / font-sans (Geist) not yet embedded —
 // system fallback with the web's weight/spacing intent. Embedding is a follow-up.
 export const typography = {

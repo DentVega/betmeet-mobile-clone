@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { useTheme } from '../../theme/useTheme';
+import { fonts } from '../../theme/tokens';
 
 /** Themed shared styles for the onboarding wizard. */
 export function useObStyles() {
   const { colors } = useTheme();
   return StyleSheet.create({
     content: { padding: 24, flexGrow: 1 },
-    title: { fontSize: 24, fontWeight: '800', letterSpacing: -0.3, color: colors.foreground, marginBottom: 16 },
+    title: { fontSize: 26, fontFamily: fonts.display, letterSpacing: -0.3, color: colors.foreground, marginBottom: 16 },
     help: { fontSize: 14, color: colors.mutedForeground, marginBottom: 16 },
     body: { fontSize: 16, color: colors.foreground, lineHeight: 24, marginBottom: 24 },
     assigned: { fontSize: 16, color: colors.success, fontWeight: '600', marginBottom: 16 },

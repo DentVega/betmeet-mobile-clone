@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { useTheme } from '../theme/useTheme';
+import { fonts } from '../theme/tokens';
 import { t } from '../i18n';
 
 interface TextFieldProps extends TextInputProps {
@@ -45,8 +46,8 @@ export function TextField({ label, error, style, secureTextEntry, ...inputProps 
 
 const styles = StyleSheet.create({
   container: { marginBottom: 16 },
-  label: { fontSize: 14, fontWeight: '600', marginBottom: 6 },
-  input: { borderWidth: 1, paddingHorizontal: 12, paddingVertical: 11, fontSize: 16 },
+  label: { fontSize: 14, fontFamily: fonts.sansSemibold, marginBottom: 6 },
+  input: { borderWidth: 1, paddingHorizontal: 12, paddingVertical: 11, fontSize: 16, fontFamily: fonts.sans },
   inputWithToggle: { paddingRight: 76 },
   toggle: { position: 'absolute', right: 0, top: 0, bottom: 0, justifyContent: 'center', paddingHorizontal: 12 },
   toggleText: { fontSize: 14, fontWeight: '600' },
