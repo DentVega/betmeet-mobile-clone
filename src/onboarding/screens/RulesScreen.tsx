@@ -6,10 +6,11 @@ import { Button } from '../../ui/Button';
 import { t } from '../../i18n';
 import { useSessionStore } from '../../session/sessionStore';
 import { completeOnboarding } from '../data/onboardingApi';
-import { obStyles as s } from './styles';
+import { useObStyles } from './styles';
 
 export function RulesScreen() {
   const dict = t().onboarding.rules;
+  const s = useObStyles();
   const userId = useSessionStore((st) => st.userId);
   const setOnboardingCompleted = useSessionStore((st) => st.setOnboardingCompleted);
   const [loading, setLoading] = useState(false);

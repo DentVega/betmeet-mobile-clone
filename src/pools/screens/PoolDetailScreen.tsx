@@ -1,12 +1,14 @@
-/** Pool detail + membership management (US-P5, US-P6). */
+/** Pool detail + membership management (US-P5, US-P6), themed. */
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import type { PoolsStackParamList } from '../../app/navigation/types';
 import { Screen, BootingScreen } from '../../ui/Screen';
 import { Button } from '../../ui/Button';
+import { Txt } from '../../ui/Text';
+import { useTheme } from '../../theme/useTheme';
 import { useSessionStore } from '../../session/sessionStore';
 import { usePoolDetail } from '../data/usePools';
 import { leavePool, deletePool, kickMember } from '../data/poolsApi';
@@ -22,6 +24,7 @@ export function PoolDetailScreen() {
   const { poolId } = useRoute<Route>().params;
   const qc = useQueryClient();
   const dict = t().pools;
+  const { colors } = useTheme();
   const userId = useSessionStore((s) => s.userId);
   const { data: pool, isLoading, refetch } = usePoolDetail(poolId);
   const [err, setErr] = useState<string | null>(null);
@@ -49,35 +52,29 @@ export function PoolDetailScreen() {
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.name}>{pool.name}</Text>
-        <Text style={styles.meta}>{dict.owner}: {nick(pool.owner)} · {members.length}/{pool.capacity} {dict.members}</Text>
+        <Txt variant="display" style={styles.name}>{pool.name}</Txt>
+        <Txt variant="muted" style={styles.meta}>{dict.owner}: {nick(pool.owner)} · {members.length}/{pool.capacity} {dict.members}</Txt>
 
-        <Text style={styles.label}>{dict.inviteToken}</Text>
-        <Text selectable style={styles.token}>{pool.invite_token}</Text>
-        <Text style={styles.hint}>{dict.copyHint}</Text>
+        <Txt style={styles.label}>{dict.inviteToken}</Txt>
+        <Txt selectable color={colors.primary} style={styles.token}>{pool.invite_token}</Txt>
+        <Txt variant="small">{dict.copyHint}</Txt>
 
-        <Text style={styles.label}>{dict.members}</Text>
+        <Txt style={styles.label}>{dict.members}</Txt>
         {members.map((m) => (
-          <View key={m.user_id} style={styles.memberRow}>
-            <Text style={styles.member}>{nick(m.user)}</Text>
+          <View key={m.user_id} style={[styles.memberRow, { borderBottomColor: colors.border }]}>
+            <Txt>{nick(m.user)}</Txt>
             {isOwner && m.user_id !== userId && (
-              <Text style={styles.kick} onPress={() => run(() => kickMember(poolId, m.user_id), 'refetch')}>
+              <Txt color={colors.destructive} style={styles.kick} onPress={() => run(() => kickMember(poolId, m.user_id), 'refetch')}>
                 {dict.kick}
-              </Text>
+              </Txt>
             )}
           </View>
         ))}
 
-        <Button
-          title={dict.leaderboard}
-          variant="secondary"
-          onPress={() => nav.navigate('PoolLeaderboard', { poolId })}
-        />
-
-        {!!err && <Text style={styles.err}>{err}</Text>}
-
+        <Button title={dict.leaderboard} variant="secondary" onPress={() => nav.navigate('PoolLeaderboard', { poolId })} />
+        {!!err && <Txt color={colors.destructive} style={styles.err}>{err}</Txt>}
         {isOwner ? (
-          <Button title={dict.delete} onPress={() => run(() => deletePool(poolId), 'back')} loading={busy} />
+          <Button title={dict.delete} variant="destructive" onPress={() => run(() => deletePool(poolId), 'back')} loading={busy} />
         ) : (
           <Button title={dict.leave} variant="secondary" onPress={() => run(() => leavePool(poolId), 'back')} loading={busy} />
         )}
@@ -88,13 +85,11 @@ export function PoolDetailScreen() {
 
 const styles = StyleSheet.create({
   content: { padding: 24 },
-  name: { fontSize: 24, fontWeight: '700', color: '#111' },
-  meta: { fontSize: 14, color: '#6b7280', marginTop: 4, marginBottom: 16 },
-  label: { fontSize: 14, fontWeight: '700', color: '#374151', marginTop: 16, marginBottom: 6 },
-  token: { fontSize: 20, fontWeight: '700', color: '#2563eb', letterSpacing: 2 },
-  hint: { fontSize: 12, color: '#9ca3af', marginTop: 2 },
-  memberRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
-  member: { fontSize: 15, color: '#111' },
-  kick: { color: '#dc2626', fontWeight: '600' },
-  err: { color: '#dc2626', fontSize: 14, marginTop: 12, textAlign: 'center' },
+  name: { fontSize: 26 },
+  meta: { marginTop: 4, marginBottom: 16 },
+  label: { fontWeight: '700', marginTop: 16, marginBottom: 6 },
+  token: { fontSize: 20, fontWeight: '700', letterSpacing: 2 },
+  memberRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1 },
+  kick: { fontWeight: '600' },
+  err: { marginTop: 12, textAlign: 'center' },
 });

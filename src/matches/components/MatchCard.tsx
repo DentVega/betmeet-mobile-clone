@@ -1,9 +1,14 @@
-/** One fixture match row (memoized for FlashList). Opens the form when editable. */
+/** One fixture match row (memoized, themed). Opens the form when editable. */
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import type { FixtureMatch } from '../data/fixture';
 import { canEdit } from '../data/fixture';
 import { t, getLocale } from '../../i18n';
+import { useTheme } from '../../theme/useTheme';
+import { Card } from '../../ui/Card';
+import { Badge } from '../../ui/Badge';
+import { Txt } from '../../ui/Text';
+import { Flag } from '../../ui/Flag';
 
 const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -12,6 +17,9 @@ function kickoffTime(iso: string | null): string {
   return new Intl.DateTimeFormat(getLocale(), { hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(new Date(iso));
 }
 
+const statusTone = (s: FixtureMatch['status']) =>
+  s === 'LIVE' ? 'live' : s === 'FINISHED' ? 'success' : 'neutral';
+
 interface Props {
   match: FixtureMatch;
   onPredict: (m: FixtureMatch) => void;
@@ -19,6 +27,7 @@ interface Props {
 
 function MatchCardBase({ match, onPredict }: Props) {
   const dict = t().matches;
+  const { colors } = useTheme();
   const home = match.homeTeam?.fifaCode ?? match.homePlaceholder ?? '—';
   const away = match.awayTeam?.fifaCode ?? match.awayPlaceholder ?? '—';
   const editable = canEdit(match, new Date());
@@ -26,31 +35,38 @@ function MatchCardBase({ match, onPredict }: Props) {
   const pred = match.prediction;
 
   return (
-    <Pressable
-      style={styles.card}
-      disabled={!editable}
-      onPress={() => onPredict(match)}>
-      <View style={styles.headerRow}>
-        <Text style={styles.teams}>{home} {dict.vs} {away}</Text>
-        <Text style={styles.status}>{dict.statuses[match.status]}</Text>
-      </View>
-      <Text style={styles.kickoff}>{kickoffTime(match.kickoffAt)}</Text>
-
-      {finished && match.homeScore !== null && (
-        <Text style={styles.result}>{match.homeScore} — {match.awayScore}</Text>
-      )}
-
-      {pred ? (
-        <View style={styles.predRow}>
-          <Text style={styles.predText}>
-            {dict.yourPick}: {pred.homeScore}—{pred.awayScore}
-          </Text>
-          {match.score && <Text style={styles.points}>+{match.score.totalPoints} {dict.points}</Text>}
+    <Pressable disabled={!editable} onPress={() => onPredict(match)} style={styles.wrap}>
+      <Card>
+        <View style={styles.headerRow}>
+          <View style={styles.teamsRow}>
+            <Flag iso={match.homeTeam?.iso} />
+            <Txt variant="title">{home}</Txt>
+            <Txt variant="muted">{dict.vs}</Txt>
+            <Flag iso={match.awayTeam?.iso} />
+            <Txt variant="title">{away}</Txt>
+          </View>
+          <Badge label={dict.statuses[match.status]} tone={statusTone(match.status)} />
         </View>
-      ) : (
-        editable && <Text style={styles.cta}>{dict.predict}</Text>
-      )}
-      {pred && editable && <Text style={styles.cta}>{dict.edit}</Text>}
+        <Txt variant="muted" style={styles.kickoff}>{kickoffTime(match.kickoffAt)}</Txt>
+
+        {finished && match.homeScore !== null && (
+          <Txt variant="heading" style={styles.result}>{match.homeScore} — {match.awayScore}</Txt>
+        )}
+
+        {pred ? (
+          <View style={styles.predRow}>
+            <Txt variant="body">{dict.yourPick}: {pred.homeScore}—{pred.awayScore}</Txt>
+            {match.score && (
+              <Txt variant="body" color={colors.success} style={styles.bold}>
+                +{match.score.totalPoints} {dict.points}
+              </Txt>
+            )}
+          </View>
+        ) : (
+          editable && <Txt variant="body" color={colors.primary} style={styles.cta}>{dict.predict}</Txt>
+        )}
+        {pred && editable && <Txt variant="body" color={colors.primary} style={styles.cta}>{dict.edit}</Txt>}
+      </Card>
     </Pressable>
   );
 }
@@ -58,14 +74,12 @@ function MatchCardBase({ match, onPredict }: Props) {
 export const MatchCard = React.memo(MatchCardBase);
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: '#fff', borderRadius: 10, padding: 14, marginHorizontal: 16, marginVertical: 6, borderWidth: 1, borderColor: '#eee' },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  teams: { fontSize: 16, fontWeight: '700', color: '#111' },
-  status: { fontSize: 12, color: '#6b7280' },
-  kickoff: { fontSize: 13, color: '#6b7280', marginTop: 2 },
-  result: { fontSize: 18, fontWeight: '700', color: '#111', marginTop: 6 },
+  wrap: { marginHorizontal: 16, marginVertical: 6 },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
+  teamsRow: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  kickoff: { marginTop: 2 },
+  result: { marginTop: 6 },
   predRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
-  predText: { fontSize: 14, color: '#374151' },
-  points: { fontSize: 14, fontWeight: '700', color: '#15803d' },
-  cta: { fontSize: 14, color: '#2563eb', fontWeight: '600', marginTop: 8 },
+  bold: { fontWeight: '700' },
+  cta: { fontWeight: '600', marginTop: 8 },
 });

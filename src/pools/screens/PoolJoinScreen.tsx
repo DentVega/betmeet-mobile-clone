@@ -1,12 +1,14 @@
 /** Join by token / deep link (US-P4). Lands here from betmeet://pools/join/TOKEN. */
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import type { PoolsStackParamList } from '../../app/navigation/types';
 import { Screen } from '../../ui/Screen';
 import { Button } from '../../ui/Button';
+import { Txt } from '../../ui/Text';
+import { useTheme } from '../../theme/useTheme';
 import { joinPoolByToken } from '../data/poolsApi';
 import { t, tr } from '../../i18n';
 
@@ -18,6 +20,7 @@ export function PoolJoinScreen() {
   const { token } = useRoute<Route>().params;
   const qc = useQueryClient();
   const dict = t().pools;
+  const { colors } = useTheme();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,13 +42,13 @@ export function PoolJoinScreen() {
       <View style={styles.center}>
         {error ? (
           <>
-            <Text style={styles.err}>{error}</Text>
+            <Txt color={colors.destructive} style={styles.err}>{error}</Txt>
             <Button title={dict.discover} onPress={() => nav.replace('PoolsList')} />
           </>
         ) : (
           <>
-            <ActivityIndicator size="large" />
-            <Text style={styles.text}>{dict.joining}</Text>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Txt variant="muted">{dict.joining}</Txt>
           </>
         )}
       </View>
@@ -55,6 +58,5 @@ export function PoolJoinScreen() {
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 },
-  text: { color: '#6b7280' },
-  err: { color: '#dc2626', fontSize: 15, textAlign: 'center' },
+  err: { fontSize: 15, textAlign: 'center' },
 });

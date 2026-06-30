@@ -12,7 +12,7 @@ import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
 import { Screen } from '../../ui/Screen';
 import { t, tr } from '../../i18n';
-import { authStyles as s } from './styles';
+import { useAuthStyles } from './styles';
 
 type Nav = NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
 const fe = (m?: string) => (m ? tr(m) : undefined);
@@ -20,6 +20,7 @@ const fe = (m?: string) => (m ? tr(m) : undefined);
 export function ForgotPasswordScreen() {
   const navigation = useNavigation<Nav>();
   const dict = t();
+  const s = useAuthStyles();
   const [serverError, setServerError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);

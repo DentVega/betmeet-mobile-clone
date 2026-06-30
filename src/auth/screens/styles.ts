@@ -1,27 +1,22 @@
 import { StyleSheet } from 'react-native';
+import { useTheme } from '../../theme/useTheme';
 
-/** Shared layout for the auth screens. */
-export const authStyles = StyleSheet.create({
-  content: { padding: 24, flexGrow: 1, justifyContent: 'center' },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#111111',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  serverError: {
-    color: '#dc2626',
-    fontSize: 14,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  info: { fontSize: 15, color: '#374151', textAlign: 'center', marginBottom: 16 },
-  success: {
-    fontSize: 15,
-    color: '#15803d',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  link: { color: '#2563eb', fontSize: 15, textAlign: 'center', marginTop: 16 },
-});
+/** Themed shared styles for the auth screens. */
+export function useAuthStyles() {
+  const { colors } = useTheme();
+  return StyleSheet.create({
+    content: { padding: 24, flexGrow: 1, justifyContent: 'center' },
+    title: {
+      fontSize: 28,
+      fontWeight: '800',
+      letterSpacing: -0.3,
+      color: colors.foreground,
+      marginBottom: 24,
+      textAlign: 'center',
+    },
+    serverError: { color: colors.destructive, fontSize: 14, marginBottom: 8, textAlign: 'center' },
+    info: { fontSize: 15, color: colors.mutedForeground, textAlign: 'center', marginBottom: 16 },
+    success: { fontSize: 15, color: colors.success, textAlign: 'center', marginBottom: 16 },
+    link: { color: colors.primary, fontSize: 15, textAlign: 'center', marginTop: 16 },
+  });
+}

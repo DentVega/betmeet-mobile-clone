@@ -18,13 +18,22 @@ import { PoolJoinScreen } from '../../pools/screens/PoolJoinScreen';
 import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboardScreen';
 import { t } from '../../i18n';
+import { useTheme } from '../../theme/useTheme';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
 
 function PoolsStack() {
+  const { colors } = useTheme();
   return (
-    <PoolsStackNav.Navigator>
+    <PoolsStackNav.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.card },
+        headerTitleStyle: { color: colors.foreground },
+        headerTintColor: colors.primary,
+        headerShadowVisible: false,
+        contentStyle: { backgroundColor: colors.background },
+      }}>
       <PoolsStackNav.Screen name="PoolsList" component={PoolsListScreen} options={{ headerShown: false }} />
       <PoolsStackNav.Screen name="PoolNew" component={PoolNewScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolDiscover" component={PoolDiscoverScreen} options={{ title: '' }} />
@@ -37,11 +46,18 @@ function PoolsStack() {
 
 export function AppTabs() {
   const dict = t();
+  const { colors } = useTheme();
   return (
     <Tabs.Navigator
       screenOptions={{
         headerShown: true,
         headerRight: () => <SignOutButton />,
+        headerStyle: { backgroundColor: colors.card },
+        headerTitleStyle: { color: colors.foreground },
+        headerShadowVisible: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.mutedForeground,
+        tabBarStyle: { backgroundColor: colors.card, borderTopColor: colors.border },
       }}>
       <Tabs.Screen
         name="Matches"

@@ -6,7 +6,7 @@ export type MatchStatus =
   | 'SCHEDULED' | 'LOCKED' | 'LIVE' | 'FINISHED' | 'POSTPONED' | 'CANCELLED';
 export type PhaseType = 'GROUP' | 'KNOCKOUT' | 'LEAGUE';
 
-export interface TeamRef { id: string; name: string; fifaCode: string; flagPath: string }
+export interface TeamRef { id: string; name: string; fifaCode: string; flagPath: string; iso: string | null }
 export interface MyPrediction {
   id: string; homeScore: number; awayScore: number;
   penaltyWinnerTeamId: string | null; lockedAt: string | null;
