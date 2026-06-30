@@ -12,6 +12,7 @@ import { signInWithGoogle } from '../googleOAuth';
 import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
 import { Screen } from '../../ui/Screen';
+import { ThemeSwitcher } from '../../ui/ThemeSwitcher';
 import { t, tr } from '../../i18n';
 import { useAuthStyles } from './styles';
 
@@ -94,6 +95,7 @@ export function SignInScreen() {
         <Text style={s.link} onPress={() => navigation.navigate('SignUp')}>
           {dict.auth.signIn.toSignUp}
         </Text>
+        <ThemeSwitcher />
       </ScrollView>
     </Screen>
   );

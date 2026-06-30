@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { AppTabsParamList, PoolsStackParamList } from './types';
 import { PlaceholderScreen } from '../../ui/Screen';
 import { SignOutButton } from '../../auth/SignOutButton';
+import { ThemeCycleButton } from '../../ui/ThemeSwitcher';
 import { MatchesScreen } from '../../matches/screens/MatchesScreen';
 import { PoolsListScreen } from '../../pools/screens/PoolsListScreen';
 import { PoolNewScreen } from '../../pools/screens/PoolNewScreen';
@@ -52,6 +53,7 @@ export function AppTabs() {
     <Tabs.Navigator
       screenOptions={{
         headerShown: true,
+        headerLeft: () => <ThemeCycleButton />,
         headerRight: () => <SignOutButton />,
         headerStyle: { backgroundColor: colors.card },
         headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },
