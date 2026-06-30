@@ -3,8 +3,15 @@
 > **Agent note:** This is your long-term progress tracker. Update it whenever you complete a Bolt, close a phase, or reach a major milestone.
 
 ## Overall Status
-- **Current Phase:** Construction — Phase C (mobile features) — **only Bolt 9 left**
-- **Bolts Completed:** 9 / 10 (Intent 001; bolts 0–8 done) — Pools done; **Bolt 9 (Leaderboard) is the final v1 bolt**
+- **🏁 v1 FEATURE-COMPLETE — all 10 bolts (0–9) done.** Construction complete.
+- **Bolts Completed:** 10 / 10 (Intent 001). Remaining = activation (apply to live Supabase + native rebuild) + device E2E, not new features.
+
+## Activation checklist (to run the full app)
+1. `supabase db push` — applies all 10 migrations (schema, RLS, triggers, all fns, seed). _(Bolts 3–5 already pushed; this adds set_nickname, pool_functions, ranking_functions.)_
+2. `supabase functions deploy set-nickname leave-pool kick-member delete-pool` _(save-prediction/create-pool/join-pool/compute-score already live)_.
+3. Native rebuild for FlashList: `bundle exec pod install --project-directory=ios` + `npm run android`/`ios`.
+4. Dashboard: Auth redirect URLs `betmeet://auth/{callback,reset,confirm}` + public `avatars` bucket (upload defaults/01–06.png).
+5. (Optional) invoke `compute-score` on the 3 seeded FINISHED matches to populate scores/leaderboard.
 
 ## Milestones Achieved
 - [x] Memory Bank and standards initialized
@@ -24,7 +31,7 @@
 - **Bolt 6 — Onboarding:** `Completed` — wizard (nickname/avatar/rules) + fn_set_nickname + set-nickname Edge Function; gate flips on complete. tsc/jest/bundle green; fn validated on PG17. **User: `db push` + `functions deploy set-nickname`.** See `bolts/bolt-6-onboarding/`.
 - **Bolt 7 — Matches & Predictions:** `Completed` — Matches tab (FlashList day-grouped) + PredictionForm via save-prediction; fixture.ts pure (group/past/canEdit). tsc/jest 51 ✓/bundle green. **FlashList native → rebuild.** See `bolts/bolt-7-predictions/`.
 - **Bolt 8 — Pools:** `Completed` — 5 screens (list/new/discover/detail/join) + leave/kick/delete fns + fn_discover_pools RPC + deep-link join. tsc/jest 51/bundle green; fns validated on PG17. **User: `db push` + `functions deploy leave-pool kick-member delete-pool`.** See `bolts/bolt-8-pools/`.
-- **Bolt 9 — Leaderboard & Rankings:** `Planned` — US-L1…L3.
+- **Bolt 9 — Leaderboard & Rankings:** `Completed` — global ranking + per-pool leaderboard via fn_global_ranking/fn_pool_leaderboard RPCs; RankingsScreen + PoolLeaderboardScreen. tsc/jest 51/bundle green; RPCs validated on PG17. See `bolts/bolt-9-leaderboard/`.
 
 ## Deferred or Blocked Tasks
 - **Phase C mobile write bolts** — blocked until Phase B (backend minimum) exists.

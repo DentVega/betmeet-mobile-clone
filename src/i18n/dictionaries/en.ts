@@ -30,6 +30,7 @@ export const en: Dictionary = {
       INTERNAL: 'Something went wrong. Please try again.',
     },
   },
+  leaderboard: { empty: 'No points yet. Come back after matches finish.' },
   pools: {
     title: 'My pools',
     create: 'Create pool',

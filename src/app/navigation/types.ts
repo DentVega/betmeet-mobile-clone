@@ -23,6 +23,7 @@ export type PoolsStackParamList = {
   PoolNew: undefined;
   PoolDiscover: undefined;
   PoolDetail: { poolId: string };
+  PoolLeaderboard: { poolId: string };
   PoolJoin: { token: string };
 };
 
