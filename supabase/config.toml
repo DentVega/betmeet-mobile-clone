@@ -54,3 +54,12 @@ verify_jwt = false
 
 [functions.set-nickname]
 verify_jwt = true
+
+[functions.leave-pool]
+verify_jwt = true
+
+[functions.kick-member]
+verify_jwt = true
+
+[functions.delete-pool]
+verify_jwt = true

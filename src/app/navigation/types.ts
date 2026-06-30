@@ -20,6 +20,9 @@ export type OnboardingStackParamList = {
 
 export type PoolsStackParamList = {
   PoolsList: undefined;
+  PoolNew: undefined;
+  PoolDiscover: undefined;
+  PoolDetail: { poolId: string };
   PoolJoin: { token: string };
 };
 
