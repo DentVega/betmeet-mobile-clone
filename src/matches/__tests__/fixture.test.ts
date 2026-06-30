@@ -6,7 +6,7 @@ import {
   type FixtureMatch,
 } from '../data/fixture';
 
-const team = (id: string) => ({ id, name: id, fifaCode: id, flagPath: '' });
+const team = (id: string) => ({ id, name: id, fifaCode: id, flagPath: '', iso: id });
 
 function m(over: Partial<FixtureMatch>): FixtureMatch {
   return {

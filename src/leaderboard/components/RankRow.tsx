@@ -1,8 +1,9 @@
 /** One leaderboard row (memoized, themed). Highlights the viewer. */
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import type { RankRow as Row } from '../data/useRankings';
 import { useTheme } from '../../theme/useTheme';
+import { Avatar } from '../../ui/Avatar';
 import { t } from '../../i18n';
 
 function RankRowBase({ row, isMe }: { row: Row; isMe: boolean }) {
@@ -10,11 +11,7 @@ function RankRowBase({ row, isMe }: { row: Row; isMe: boolean }) {
   return (
     <View style={[styles.row, { borderBottomColor: colors.border }, isMe && { backgroundColor: colors.accent }]}>
       <Text style={[styles.rank, { color: colors.mutedForeground }]}>{row.rank}</Text>
-      {row.avatar_url ? (
-        <Image source={{ uri: row.avatar_url }} style={[styles.avatar, { backgroundColor: colors.muted }]} />
-      ) : (
-        <View style={[styles.avatar, { backgroundColor: colors.muted }]} />
-      )}
+      <Avatar url={row.avatar_url} size={32} />
       <Text style={[styles.nick, { color: isMe ? colors.primary : colors.foreground, fontWeight: isMe ? '700' : '400' }]} numberOfLines={1}>
         {row.nickname}
       </Text>

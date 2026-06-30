@@ -6,6 +6,9 @@
 - **🏁 v1 FEATURE-COMPLETE — all 10 bolts (0–9) done.** Construction complete.
 - **Bolts Completed:** 10 / 10 (Intent 001). Remaining = activation (apply to live Supabase + native rebuild) + device E2E, not new features.
 
+## Post-v1
+- **Bolt 10 — Design Parity:** `Completed` — deportivo theme (light/dark) + themed primitives + all screens restyled + flags/avatars (react-native-svg, native rebuilt). Verified on device. Follow-ups: embed Barlow/Geist fonts; iOS `pod install`; moderno/premium themes. See `bolts/bolt-10-design-parity/`.
+
 ## Activation checklist (to run the full app)
 1. ✅ DONE — `supabase db push`: all **10/10 migrations** applied to remote.
 2. ✅ DONE — `functions deploy`: all **8/8 Edge Functions** ACTIVE; ADMIN_SECRET set.

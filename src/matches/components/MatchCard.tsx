@@ -8,6 +8,7 @@ import { useTheme } from '../../theme/useTheme';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import { Txt } from '../../ui/Text';
+import { Flag } from '../../ui/Flag';
 
 const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -37,7 +38,13 @@ function MatchCardBase({ match, onPredict }: Props) {
     <Pressable disabled={!editable} onPress={() => onPredict(match)} style={styles.wrap}>
       <Card>
         <View style={styles.headerRow}>
-          <Txt variant="title">{home} {dict.vs} {away}</Txt>
+          <View style={styles.teamsRow}>
+            <Flag iso={match.homeTeam?.iso} />
+            <Txt variant="title">{home}</Txt>
+            <Txt variant="muted">{dict.vs}</Txt>
+            <Flag iso={match.awayTeam?.iso} />
+            <Txt variant="title">{away}</Txt>
+          </View>
           <Badge label={dict.statuses[match.status]} tone={statusTone(match.status)} />
         </View>
         <Txt variant="muted" style={styles.kickoff}>{kickoffTime(match.kickoffAt)}</Txt>
@@ -69,6 +76,7 @@ export const MatchCard = React.memo(MatchCardBase);
 const styles = StyleSheet.create({
   wrap: { marginHorizontal: 16, marginVertical: 6 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
+  teamsRow: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
   kickoff: { marginTop: 2 },
   result: { marginTop: 6 },
   predRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },

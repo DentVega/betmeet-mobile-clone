@@ -9,7 +9,7 @@ const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function shape(row: any): FixtureMatch {
   const team = (t: any) =>
-    t ? { id: t.id, name: t.name, fifaCode: t.fifa_code, flagPath: t.flag_path } : null;
+    t ? { id: t.id, name: t.name, fifaCode: t.fifa_code, flagPath: t.flag_path, iso: t.iso_alpha2 ?? null } : null;
   // RLS returns only my predictions; pick the global-scope one (pool_id null).
   const preds: any[] = row.predictions ?? [];
   const global = preds.find((p) => p.pool_id === null) ?? null;
@@ -51,8 +51,8 @@ export function useFixture() {
         .from('matches')
         .select(
           `id,kickoff_at,status,home_score,away_score,winner_team_id,home_placeholder,away_placeholder,
-           home_team:teams!matches_home_team_id_fkey(id,name,fifa_code,flag_path),
-           away_team:teams!matches_away_team_id_fkey(id,name,fifa_code,flag_path),
+           home_team:teams!matches_home_team_id_fkey(id,name,fifa_code,flag_path,iso_alpha2),
+           away_team:teams!matches_away_team_id_fkey(id,name,fifa_code,flag_path,iso_alpha2),
            phase:competition_phases(type),
            predictions(id,home_score,away_score,penalty_winner_team_id,locked_at,pool_id),
            prediction_scores(prediction_id,total_points,matched_case)`,
