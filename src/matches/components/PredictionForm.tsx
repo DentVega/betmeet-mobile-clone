@@ -14,13 +14,24 @@ function clampScore(v: string): number {
   return Math.max(0, Math.min(20, Number.isNaN(n) ? 0 : n));
 }
 
-export function PredictionForm({ match, onClose }: { match: FixtureMatch; onClose: () => void }) {
+export function PredictionForm({
+  match,
+  poolId,
+  onClose,
+}: {
+  match: FixtureMatch;
+  /** When set, saves a pool-scoped override (FR-PP1). */
+  poolId?: string;
+  onClose: () => void;
+}) {
   const dict = t().matches;
+  const pdict = t().pools;
   const { colors, radius } = useTheme();
   const qc = useQueryClient();
   const [home, setHome] = useState(String(match.prediction?.homeScore ?? 0));
   const [away, setAway] = useState(String(match.prediction?.awayScore ?? 0));
   const [pen, setPen] = useState<string | null>(match.prediction?.penaltyWinnerTeamId ?? null);
+  const [alsoGlobal, setAlsoGlobal] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -36,10 +47,13 @@ export function PredictionForm({ match, onClose }: { match: FixtureMatch; onClos
       homeScore: h,
       awayScore: a,
       penaltyWinnerTeamId: knockoutDraw ? pen : null,
+      poolId: poolId ?? null,
+      alsoSaveAsGlobal: poolId ? alsoGlobal : false,
     });
     setLoading(false);
     if (res.ok) {
       await qc.invalidateQueries({ queryKey: ['fixture'] });
+      if (poolId) await qc.invalidateQueries({ queryKey: ['poolPredictions', poolId] });
       onClose();
     } else {
       setErr(tr('matches.errors.' + (res.code ?? 'INTERNAL')));
@@ -90,6 +104,15 @@ export function PredictionForm({ match, onClose }: { match: FixtureMatch; onClos
               </View>
             </View>
           )}
+          {poolId && (
+            <>
+              <Txt variant="small" style={styles.penLabel}>{pdict.overrideHint}</Txt>
+              <Pressable onPress={() => setAlsoGlobal((v) => !v)} style={styles.alsoRow}>
+                <View style={[styles.checkbox, { borderColor: colors.border, backgroundColor: alsoGlobal ? colors.primary : 'transparent' }]} />
+                <Txt variant="body">{pdict.alsoGlobal}</Txt>
+              </Pressable>
+            </>
+          )}
           {!!err && <Txt color={colors.destructive} style={styles.err}>{err}</Txt>}
           <Button title={dict.save} onPress={onSave} loading={loading} disabled={knockoutDraw && !pen} />
           <Button title={dict.cancel} variant="secondary" onPress={onClose} />
@@ -112,4 +135,6 @@ const styles = StyleSheet.create({
   penRow: { flexDirection: 'row', gap: 12, justifyContent: 'center' },
   pen: { borderWidth: 1, paddingVertical: 10, paddingHorizontal: 20 },
   err: { textAlign: 'center', marginTop: 12 },
+  alsoRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 8, marginBottom: 4 },
+  checkbox: { width: 20, height: 20, borderWidth: 2, borderRadius: 4 },
 });

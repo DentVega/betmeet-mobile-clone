@@ -71,7 +71,14 @@ export function PoolDetailScreen() {
           </View>
         ))}
 
+        <Button title={dict.predictions} variant="secondary" onPress={() => nav.navigate('PoolPredictions', { poolId })} />
         <Button title={dict.leaderboard} variant="secondary" onPress={() => nav.navigate('PoolLeaderboard', { poolId })} />
+        {(isOwner || pool.members_can_invite) && (
+          <Button title={dict.invite} variant="secondary" onPress={() => nav.navigate('PoolInvite', { poolId })} />
+        )}
+        {isOwner && (
+          <Button title={dict.settings} variant="secondary" onPress={() => nav.navigate('PoolSettings', { poolId })} />
+        )}
         {!!err && <Txt color={colors.destructive} style={styles.err}>{err}</Txt>}
         {isOwner ? (
           <Button title={dict.delete} variant="destructive" onPress={() => run(() => deletePool(poolId), 'back')} loading={busy} />

@@ -72,7 +72,7 @@ export function usePoolDetail(poolId: string) {
       const { data, error } = await supabase
         .from('pools')
         .select(
-          `id,name,type,capacity,owner_id,invite_token,
+          `id,name,type,capacity,owner_id,invite_token,members_can_invite,archived_at,
            owner:profiles!pools_owner_id_fkey(nickname_base,nickname_discriminator,avatar_url),
            members:pool_memberships(user_id,joined_at,user:profiles(nickname_base,nickname_discriminator,avatar_url))`,
         )
