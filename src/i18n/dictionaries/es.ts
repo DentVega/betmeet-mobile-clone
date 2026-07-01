@@ -40,6 +40,7 @@ export const es = {
     language: 'Idioma',
     account: 'Cuenta y seguridad',
     notifications: 'Notificaciones',
+    rules: 'Reglas',
     comingSoon: 'Próximamente',
     pushEnable: 'Activar notificaciones',
     pushEnabled: 'Notificaciones activadas.',

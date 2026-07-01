@@ -39,6 +39,7 @@ export const en: Dictionary = {
     language: 'Language',
     account: 'Account & security',
     notifications: 'Notifications',
+    rules: 'Rules',
     comingSoon: 'Coming soon',
     pushEnable: 'Enable notifications',
     pushEnabled: 'Notifications enabled.',

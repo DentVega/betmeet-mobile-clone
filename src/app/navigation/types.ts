@@ -33,6 +33,7 @@ export type PoolsStackParamList = {
 export type SettingsStackParamList = {
   SettingsHome: undefined;
   Security: undefined;
+  Rules: undefined;
 };
 
 export type AppTabsParamList = {

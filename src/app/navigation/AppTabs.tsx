@@ -20,6 +20,7 @@ import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboard
 import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { SettingsScreen } from '../../settings/screens/SettingsScreen';
 import { SecurityScreen } from '../../settings/screens/SecurityScreen';
+import { RulesScreen } from '../../education/RulesScreen';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
 import { fonts } from '../../theme/tokens';
@@ -66,6 +67,7 @@ function SettingsStack() {
       }}>
       <SettingsStackNav.Screen name="SettingsHome" component={SettingsScreen} options={{ title: t().settings.title }} />
       <SettingsStackNav.Screen name="Security" component={SecurityScreen} options={{ title: t().settings.account }} />
+      <SettingsStackNav.Screen name="Rules" component={RulesScreen} options={{ title: t().onboarding.rules.title }} />
     </SettingsStackNav.Navigator>
   );
 }

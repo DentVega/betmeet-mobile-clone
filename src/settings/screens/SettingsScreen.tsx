@@ -120,6 +120,10 @@ export function SettingsScreen() {
         <Section title={dict.account}>
           <Button title={dict.account} variant="secondary" onPress={() => nav.navigate('Security')} />
         </Section>
+
+        <Section title={dict.rules}>
+          <Button title={t().onboarding.rules.title} variant="secondary" onPress={() => nav.navigate('Rules')} />
+        </Section>
         <Section title={dict.notifications}>
           <NotificationsPanel />
         </Section>
