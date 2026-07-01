@@ -13,8 +13,9 @@ export interface Theme {
 }
 
 export function useTheme(): Theme {
-  const scheme = useColorScheme();
-  const dark = scheme === 'dark';
+  const deviceScheme = useColorScheme();
   const brand = useBrandStore((s) => s.brand);
+  const pref = useBrandStore((s) => s.scheme);
+  const dark = pref === 'system' ? deviceScheme === 'dark' : pref === 'dark';
   return { colors: themes[brand][dark ? 'dark' : 'light'], dark, brand, radius, spacing, typography };
 }
