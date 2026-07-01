@@ -60,6 +60,7 @@ export const es = {
       INTERNAL: 'Algo salió mal. Inténtalo de nuevo.',
     },
   },
+  profile: { title: 'Perfil', edit: 'Editar en Ajustes' },
   security: {
     changeEmail: 'Cambiar correo',
     newEmail: 'Nuevo correo',

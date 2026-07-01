@@ -20,7 +20,9 @@ import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboard
 import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { SettingsScreen } from '../../settings/screens/SettingsScreen';
 import { SecurityScreen } from '../../settings/screens/SecurityScreen';
+import { ProfileScreen } from '../../settings/screens/ProfileScreen';
 import { RulesScreen } from '../../education/RulesScreen';
+import { AppHeaderRight } from '../../ui/AppHeaderRight';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
 import { fonts } from '../../theme/tokens';
@@ -40,9 +42,10 @@ function PoolsStack() {
         headerTitleStyle: { color: colors.foreground },
         headerTintColor: colors.primary,
         headerShadowVisible: false,
+        headerRight: () => <AppHeaderRight />,
         contentStyle: { backgroundColor: colors.background },
       }}>
-      <PoolsStackNav.Screen name="PoolsList" component={PoolsListScreen} options={{ headerShown: false }} />
+      <PoolsStackNav.Screen name="PoolsList" component={PoolsListScreen} options={{ title: t().tabs.pools }} />
       <PoolsStackNav.Screen name="PoolNew" component={PoolNewScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolDiscover" component={PoolDiscoverScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolDetail" component={PoolDetailScreen} options={{ title: '' }} />
@@ -63,10 +66,12 @@ function SettingsStack() {
         headerStyle: { backgroundColor: colors.card },
         headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },
         headerShadowVisible: false,
+        headerRight: () => <AppHeaderRight />,
         contentStyle: { backgroundColor: colors.background },
       }}>
       <SettingsStackNav.Screen name="SettingsHome" component={SettingsScreen} options={{ title: t().settings.title }} />
       <SettingsStackNav.Screen name="Security" component={SecurityScreen} options={{ title: t().settings.account }} />
+      <SettingsStackNav.Screen name="Profile" component={ProfileScreen} options={{ title: t().profile.title }} />
     </SettingsStackNav.Navigator>
   );
 }
@@ -82,6 +87,7 @@ export function AppTabs() {
         headerStyle: { backgroundColor: colors.card },
         headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },
         headerShadowVisible: false,
+        headerRight: () => <AppHeaderRight />,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedForeground,
         tabBarLabelStyle: { fontFamily: fonts.sansMedium },

@@ -59,6 +59,7 @@ export const en: Dictionary = {
       INTERNAL: 'Something went wrong. Please try again.',
     },
   },
+  profile: { title: 'Profile', edit: 'Edit in Settings' },
   security: {
     changeEmail: 'Change email',
     newEmail: 'New email',
