@@ -16,13 +16,16 @@ import { BootingScreen } from '../ui/Screen';
 import { useSessionBootstrap } from '../session/useSessionBootstrap';
 import { useDeepLinkHandler } from './deepLinks';
 import { useBrandStore } from '../theme/brandStore';
+import { useLocaleStore } from '../i18n/localeStore';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
   useSessionBootstrap();
   useDeepLinkHandler();
+  const locale = useLocaleStore((s) => s.locale);
   React.useEffect(() => {
     void useBrandStore.getState().hydrate();
+    void useLocaleStore.getState().hydrate();
   }, []);
 
   return (
@@ -30,7 +33,8 @@ function App() {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <QueryClientProvider client={queryClient}>
         <NavigationContainer ref={navigationRef} fallback={<BootingScreen />}>
-          <RootNavigator />
+          {/* key={locale} remounts the tree on language change so t() refreshes (ADR-016) */}
+          <RootNavigator key={locale} />
         </NavigationContainer>
       </QueryClientProvider>
     </SafeAreaProvider>

@@ -13,6 +13,7 @@ import { TextField } from '../../ui/TextField';
 import { Button } from '../../ui/Button';
 import { Screen } from '../../ui/Screen';
 import { ThemeSwitcher } from '../../ui/ThemeSwitcher';
+import { LocaleSwitcher } from '../../ui/LocaleSwitcher';
 import { t, tr } from '../../i18n';
 import { useAuthStyles } from './styles';
 
@@ -96,6 +97,7 @@ export function SignInScreen() {
           {dict.auth.signIn.toSignUp}
         </Text>
         <ThemeSwitcher />
+        <LocaleSwitcher />
       </ScrollView>
     </Screen>
   );

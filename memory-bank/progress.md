@@ -6,6 +6,11 @@
 - **🏁 v1 FEATURE-COMPLETE — all 10 bolts (0–9) done.** Construction complete.
 - **Bolts Completed:** 10 / 10 (Intent 001). Remaining = activation (apply to live Supabase + native rebuild) + device E2E, not new features.
 
+## Intent 002 — v2 full web parity (Inception done)
+- **Inception COMPLETE** (`intents/002-v2-web-parity/`): requirements, system-context, 8 unit briefs, 33 stories, 10-bolt plan — all checkpoints approved. Verified via a Units 1–72 web-vs-mobile gap analysis.
+- Scope: full parity; 3 native modules (image picker, passkeys/biometrics, push); auto-scoring + minimal result-entry (no live football-data sync, no full admin); single bundle.
+- Bolts (Planned): V1 i18n ✅ · V2 Settings+Profile · V3 Results&Auto-scoring · V4 Realtime&Live · V5 Pool-Depth backend · V6 Pool-Depth mobile · V7 Account&Security · V8 Avatar upload (native) · V9 Passkeys/biometrics (native) · V10 Notifications/push (native). **V1 done → Next: V2.**
+
 ## Post-v1
 - **Bolt 10 — Design Parity:** `Completed` — deportivo theme (light/dark) + themed primitives + all screens restyled + flags/avatars (react-native-svg, native rebuilt). Verified on device. Follow-ups: embed Barlow/Geist fonts; iOS `pod install`; moderno/premium themes. See `bolts/bolt-10-design-parity/`.
 
