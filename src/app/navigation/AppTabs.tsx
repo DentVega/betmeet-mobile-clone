@@ -19,6 +19,7 @@ import { PoolPredictionsScreen } from '../../pools/screens/PoolPredictionsScreen
 import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboardScreen';
 import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { SettingsScreen } from '../../settings/screens/SettingsScreen';
+import { SecurityScreen } from '../../settings/screens/SecurityScreen';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
 import { fonts } from '../../theme/tokens';
@@ -63,6 +64,7 @@ function SettingsStack() {
         contentStyle: { backgroundColor: colors.background },
       }}>
       <SettingsStackNav.Screen name="SettingsHome" component={SettingsScreen} options={{ title: t().settings.title }} />
+      <SettingsStackNav.Screen name="Security" component={SecurityScreen} options={{ title: t().settings.account }} />
     </SettingsStackNav.Navigator>
   );
 }
