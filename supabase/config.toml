@@ -52,6 +52,9 @@ verify_jwt = true
 [functions.compute-score]
 verify_jwt = false
 
+[functions.enter-result]
+verify_jwt = false
+
 [functions.set-nickname]
 verify_jwt = true
 

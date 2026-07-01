@@ -15,8 +15,8 @@
 - **Bolt 10 — Design Parity:** `Completed` — deportivo theme (light/dark) + themed primitives + all screens restyled + flags/avatars (react-native-svg, native rebuilt). Verified on device. Follow-ups: embed Barlow/Geist fonts; iOS `pod install`; moderno/premium themes. See `bolts/bolt-10-design-parity/`.
 
 ## Activation checklist (to run the full app)
-1. ✅ DONE — `supabase db push`: all **10/10 migrations** applied to remote.
-2. ✅ DONE — `functions deploy`: all **8/8 Edge Functions** ACTIVE; ADMIN_SECRET set.
+1. ✅ DONE — `supabase db push`: all **12/12 migrations** applied to remote (incl. V2 nickname_cooldown + V3 auto_scoring trigger + realtime publication).
+2. ✅ DONE — `functions deploy`: **10/10 Edge Functions** ACTIVE (added V3 `enter-result`; redeployed `set-nickname` for RATE_LIMITED); ADMIN_SECRET set.
 3. ⬜ Native rebuild for FlashList: `bundle exec pod install --project-directory=ios` + `npm run android`/`ios`.
 4. ⬜ Dashboard: Auth redirect URLs `betmeet://auth/{callback,reset,confirm}` + public `avatars` bucket (upload defaults/01–06.png).
 5. ⬜ (Optional) invoke `compute-score` on the 3 seeded FINISHED matches to populate scores/leaderboard.
