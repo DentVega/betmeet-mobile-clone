@@ -4,12 +4,13 @@
  * Bolt 0 — real features land in Bolts 4/5/6.
  */
 import React from 'react';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { AppTabsParamList, PoolsStackParamList } from './types';
-import { PlaceholderScreen } from '../../ui/Screen';
 import { SignOutButton } from '../../auth/SignOutButton';
 import { ThemeCycleButton } from '../../ui/ThemeSwitcher';
+import { LocaleCycleButton } from '../../ui/LocaleSwitcher';
 import { MatchesScreen } from '../../matches/screens/MatchesScreen';
 import { PoolsListScreen } from '../../pools/screens/PoolsListScreen';
 import { PoolNewScreen } from '../../pools/screens/PoolNewScreen';
@@ -53,7 +54,12 @@ export function AppTabs() {
     <Tabs.Navigator
       screenOptions={{
         headerShown: true,
-        headerLeft: () => <ThemeCycleButton />,
+        headerLeft: () => (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <ThemeCycleButton />
+            <LocaleCycleButton />
+          </View>
+        ),
         headerRight: () => <SignOutButton />,
         headerStyle: { backgroundColor: colors.card },
         headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },

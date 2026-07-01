@@ -3,6 +3,9 @@
 > **Agent note:** This is your short-term memory. Read it at the start of every session and update it immediately after making an important decision, changing focus, or encountering a blocker.
 
 ## Current Focus
+- **Intent 002 (v2 full web parity) — Inception COMPLETE.** Gap analysis (web Units 1–72 vs mobile v1) done; all 5 artifacts written + approved under `memory-bank/intents/002-v2-web-parity/`. Scope: full parity incl. 3 native modules (image picker, passkeys/biometrics, push FCM/APNs); auto-scoring + minimal result-entry (NO live football-data sync / full admin); single bundle. 8 units, 33 stories, 10 bolts (V1–V10). **Next: `/bolt-start` for V1 (i18n foundation).**
+
+## Previous Focus (Intent 001 + design)
 - **🏁 v1 FEATURE-COMPLETE — all 10 bolts (0–9) done, validated locally** (tsc clean, jest 51/51, Rspack bundle green; all SQL/functions exercised on ephemeral PG17). Remaining work is **activation**, not features.
 - **Backend FULLY DEPLOYED** to the user's Supabase (verified): 10/10 migrations applied, 8/8 Edge Functions ACTIVE, ADMIN_SECRET set. Remaining = client-side activation only: **native rebuild for FlashList** (`pod install` + run) and **dashboard config** (Auth redirect URLs `betmeet://…` + public `avatars` bucket). Then device E2E.
 - Pending dashboard (manual): Auth redirect URLs `betmeet://...` + public `avatars` bucket (for full auth E2E + avatar images).
