@@ -13,6 +13,9 @@ import { PoolNewScreen } from '../../pools/screens/PoolNewScreen';
 import { PoolDiscoverScreen } from '../../pools/screens/PoolDiscoverScreen';
 import { PoolDetailScreen } from '../../pools/screens/PoolDetailScreen';
 import { PoolJoinScreen } from '../../pools/screens/PoolJoinScreen';
+import { PoolSettingsScreen } from '../../pools/screens/PoolSettingsScreen';
+import { PoolInviteScreen } from '../../pools/screens/PoolInviteScreen';
+import { PoolPredictionsScreen } from '../../pools/screens/PoolPredictionsScreen';
 import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboardScreen';
 import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { SettingsScreen } from '../../settings/screens/SettingsScreen';
@@ -41,6 +44,9 @@ function PoolsStack() {
       <PoolsStackNav.Screen name="PoolDiscover" component={PoolDiscoverScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolDetail" component={PoolDetailScreen} options={{ title: '' }} />
       <PoolsStackNav.Screen name="PoolLeaderboard" component={PoolLeaderboardScreen} options={{ title: '' }} />
+      <PoolsStackNav.Screen name="PoolSettings" component={PoolSettingsScreen} options={{ title: t().pools.settings }} />
+      <PoolsStackNav.Screen name="PoolInvite" component={PoolInviteScreen} options={{ title: t().pools.invite }} />
+      <PoolsStackNav.Screen name="PoolPredictions" component={PoolPredictionsScreen} options={{ title: t().pools.predictions }} />
       <PoolsStackNav.Screen name="PoolJoin" component={PoolJoinScreen} options={{ title: '' }} />
     </PoolsStackNav.Navigator>
   );

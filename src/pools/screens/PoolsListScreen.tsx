@@ -10,6 +10,7 @@ import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 import { Txt } from '../../ui/Text';
 import { useMyPools, type PoolSummary } from '../data/usePools';
+import { PendingInvites } from '../components/PendingInvites';
 import { t } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<PoolsStackParamList, 'PoolsList'>;
@@ -42,6 +43,7 @@ export function PoolsListScreen() {
         <View style={styles.flex}><Button title={dict.create} onPress={() => nav.navigate('PoolNew')} /></View>
         <View style={styles.flex}><Button title={dict.discover} variant="secondary" onPress={() => nav.navigate('PoolDiscover')} /></View>
       </View>
+      <PendingInvites />
       {(data ?? []).length === 0 ? (
         <Txt variant="muted" style={styles.empty}>{dict.empty}</Txt>
       ) : (

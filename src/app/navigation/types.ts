@@ -24,6 +24,9 @@ export type PoolsStackParamList = {
   PoolDiscover: undefined;
   PoolDetail: { poolId: string };
   PoolLeaderboard: { poolId: string };
+  PoolSettings: { poolId: string };
+  PoolInvite: { poolId: string };
+  PoolPredictions: { poolId: string };
   PoolJoin: { token: string };
 };
 
