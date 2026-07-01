@@ -1,6 +1,11 @@
 jest.mock('../../session/secureStorage', () => ({
   secureStorage: { getItem: jest.fn(), setItem: jest.fn(), removeItem: jest.fn() },
 }));
+// localeStore imports the supabase client (for profiles.locale sync) — stub it so
+// jest doesn't construct the real client (native keychain adapter).
+jest.mock('../../session/supabaseClient', () => ({
+  supabase: { from: () => ({ update: () => ({ eq: () => Promise.resolve({ error: null }) }) }) },
+}));
 
 import { secureStorage } from '../../session/secureStorage';
 import { useLocaleStore } from '../localeStore';
