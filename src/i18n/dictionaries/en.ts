@@ -18,6 +18,7 @@ export const en: Dictionary = {
     save: 'Save',
     cancel: 'Cancel',
     vs: 'vs',
+    liveNow: 'Live now',
     statuses: {
       SCHEDULED: 'Scheduled', LOCKED: 'Locked', LIVE: 'Live',
       FINISHED: 'Finished', POSTPONED: 'Postponed', CANCELLED: 'Cancelled',
@@ -30,7 +31,7 @@ export const en: Dictionary = {
       INTERNAL: 'Something went wrong. Please try again.',
     },
   },
-  leaderboard: { empty: 'No points yet. Come back after matches finish.' },
+  leaderboard: { empty: 'No points yet. Come back after matches finish.', proj: 'proj.' },
   settings: {
     title: 'Settings',
     profile: 'Profile',

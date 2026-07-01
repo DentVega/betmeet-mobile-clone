@@ -19,6 +19,7 @@ export const es = {
     save: 'Guardar',
     cancel: 'Cancelar',
     vs: 'vs',
+    liveNow: 'En vivo ahora',
     statuses: {
       SCHEDULED: 'Programado', LOCKED: 'Bloqueado', LIVE: 'En vivo',
       FINISHED: 'Finalizado', POSTPONED: 'Aplazado', CANCELLED: 'Cancelado',
@@ -31,7 +32,7 @@ export const es = {
       INTERNAL: 'Algo salió mal. Inténtalo de nuevo.',
     },
   },
-  leaderboard: { empty: 'Aún no hay puntos. Vuelve cuando terminen los partidos.' },
+  leaderboard: { empty: 'Aún no hay puntos. Vuelve cuando terminen los partidos.', proj: 'proy.' },
   settings: {
     title: 'Ajustes',
     profile: 'Perfil',
