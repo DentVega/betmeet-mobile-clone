@@ -1,6 +1,9 @@
 /** Settings home (US-PS1): Profile · Appearance · Language · Account/Notifications (later) · Sign out. */
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { SettingsStackParamList } from '../../app/navigation/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { Screen, BootingScreen } from '../../ui/Screen';
 import { Card } from '../../ui/Card';
@@ -32,6 +35,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export function SettingsScreen() {
   const dict = t().settings;
   const { colors } = useTheme();
+  const nav = useNavigation<NativeStackNavigationProp<SettingsStackParamList, 'SettingsHome'>>();
   const qc = useQueryClient();
   const userId = useSessionStore((s) => s.userId);
   const { data: profile, isLoading } = useMyProfile();
@@ -113,7 +117,7 @@ export function SettingsScreen() {
 
         {/* Placeholders for later bolts */}
         <Section title={dict.account}>
-          <Txt variant="muted">{dict.comingSoon}</Txt>
+          <Button title={dict.account} variant="secondary" onPress={() => nav.navigate('Security')} />
         </Section>
         <Section title={dict.notifications}>
           <Txt variant="muted">{dict.comingSoon}</Txt>
