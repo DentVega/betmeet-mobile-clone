@@ -33,7 +33,6 @@ export type PoolsStackParamList = {
 export type SettingsStackParamList = {
   SettingsHome: undefined;
   Security: undefined;
-  Profile: undefined;
 };
 
 export type AppTabsParamList = {
@@ -42,4 +41,9 @@ export type AppTabsParamList = {
   Rankings: undefined;
   Rules: undefined;
   Settings: NavigatorScreenParams<SettingsStackParamList> | undefined;
+};
+
+export type AppStackParamList = {
+  Tabs: NavigatorScreenParams<AppTabsParamList> | undefined;
+  Profile: undefined;
 };

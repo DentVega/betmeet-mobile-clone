@@ -8,7 +8,7 @@ import { useSessionStore } from '../session/sessionStore';
 import { resolveAppPhase } from '../domain/appPhase';
 import { AuthStack } from './navigation/AuthStack';
 import { OnboardingStack } from './navigation/OnboardingStack';
-import { AppTabs } from './navigation/AppTabs';
+import { AppStack } from './navigation/AppStack';
 import { BootingScreen } from '../ui/Screen';
 import { replayParkedIntent } from './deepLinks';
 
@@ -31,6 +31,6 @@ export function RootNavigator() {
     case 'Onboarding':
       return <OnboardingStack />;
     case 'App':
-      return <AppTabs />;
+      return <AppStack />;
   }
 }

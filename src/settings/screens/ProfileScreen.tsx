@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { SettingsStackParamList } from '../../app/navigation/types';
+import type { AppStackParamList } from '../../app/navigation/types';
 import { Screen, BootingScreen } from '../../ui/Screen';
 import { Avatar } from '../../ui/Avatar';
 import { Txt } from '../../ui/Text';
@@ -12,7 +12,7 @@ import { supabase } from '../../session/supabaseClient';
 import { useMyProfile } from '../data/useMyProfile';
 import { t } from '../../i18n';
 
-type Nav = NativeStackNavigationProp<SettingsStackParamList, 'Profile'>;
+type Nav = NativeStackNavigationProp<AppStackParamList, 'Profile'>;
 
 export function ProfileScreen() {
   const nav = useNavigation<Nav>();
@@ -33,7 +33,7 @@ export function ProfileScreen() {
         <Txt variant="display" style={styles.nick}>{nick}</Txt>
         {!!email && <Txt variant="muted">{email}</Txt>}
         <View style={styles.spacer} />
-        <Button title={t().profile.edit} variant="secondary" onPress={() => nav.navigate('SettingsHome')} />
+        <Button title={t().profile.edit} variant="secondary" onPress={() => nav.navigate('Tabs', { screen: 'Settings' })} />
       </View>
     </Screen>
   );

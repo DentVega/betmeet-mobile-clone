@@ -15,7 +15,7 @@ export function AppHeaderRight() {
     <View style={styles.row}>
       <LocaleCycleButton />
       <Pressable
-        onPress={() => nav.navigate('Settings', { screen: 'Profile' })}
+        onPress={() => nav.navigate('Profile')}
         hitSlop={8}
         accessibilityRole="button"
         accessibilityLabel="profile"
