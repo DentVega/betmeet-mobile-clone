@@ -24,6 +24,7 @@ import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
 import { fonts } from '../../theme/tokens';
 import { useLiveResults } from '../../session/useLiveResults';
+import { TabIcon } from '../../ui/TabIcon';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
@@ -85,10 +86,26 @@ export function AppTabs() {
         tabBarLabelStyle: { fontFamily: fonts.sansMedium },
         tabBarStyle: { backgroundColor: colors.card, borderTopColor: colors.border },
       }}>
-      <Tabs.Screen name="Matches" component={MatchesScreen} options={{ title: dict.tabs.matches }} />
-      <Tabs.Screen name="Pools" component={PoolsStack} options={{ title: dict.tabs.pools, headerShown: false }} />
-      <Tabs.Screen name="Rankings" component={RankingsScreen} options={{ title: dict.tabs.rankings }} />
-      <Tabs.Screen name="Settings" component={SettingsStack} options={{ title: dict.settings.title, headerShown: false }} />
+      <Tabs.Screen
+        name="Matches"
+        component={MatchesScreen}
+        options={{ title: dict.tabs.matches, tabBarIcon: ({ color, size }) => <TabIcon name="matches" color={color} size={size} /> }}
+      />
+      <Tabs.Screen
+        name="Pools"
+        component={PoolsStack}
+        options={{ title: dict.tabs.pools, headerShown: false, tabBarIcon: ({ color, size }) => <TabIcon name="pools" color={color} size={size} /> }}
+      />
+      <Tabs.Screen
+        name="Rankings"
+        component={RankingsScreen}
+        options={{ title: dict.tabs.rankings, tabBarIcon: ({ color, size }) => <TabIcon name="rankings" color={color} size={size} /> }}
+      />
+      <Tabs.Screen
+        name="Settings"
+        component={SettingsStack}
+        options={{ title: dict.settings.title, headerShown: false, tabBarIcon: ({ color, size }) => <TabIcon name="settings" color={color} size={size} /> }}
+      />
     </Tabs.Navigator>
   );
 }
