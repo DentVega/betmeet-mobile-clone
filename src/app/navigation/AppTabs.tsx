@@ -19,6 +19,7 @@ import { SettingsScreen } from '../../settings/screens/SettingsScreen';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
 import { fonts } from '../../theme/tokens';
+import { useLiveResults } from '../../session/useLiveResults';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
@@ -63,6 +64,7 @@ function SettingsStack() {
 export function AppTabs() {
   const dict = t();
   const { colors } = useTheme();
+  useLiveResults();
   return (
     <Tabs.Navigator
       screenOptions={{

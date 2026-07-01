@@ -9,14 +9,14 @@
 ## Intent 002 — v2 full web parity (Inception done)
 - **Inception COMPLETE** (`intents/002-v2-web-parity/`): requirements, system-context, 8 unit briefs, 33 stories, 10-bolt plan — all checkpoints approved. Verified via a Units 1–72 web-vs-mobile gap analysis.
 - Scope: full parity; 3 native modules (image picker, passkeys/biometrics, push); auto-scoring + minimal result-entry (no live football-data sync, no full admin); single bundle.
-- Bolts (Planned): V1 i18n ✅ · V2 Settings+Profile ✅ · V3 Results&Auto-scoring ✅ · V4 Realtime&Live · V5 Pool-Depth backend · V6 Pool-Depth mobile · V7 Account&Security · V8 Avatar upload (native) · V9 Passkeys/biometrics (native) · V10 Notifications/push (native). **V3 done → Next: V4.**
+- Bolts (Planned): V1 i18n ✅ · V2 Settings+Profile ✅ · V3 Results&Auto-scoring ✅ · V4 Realtime&Live ✅ · V5 Pool-Depth backend · V6 Pool-Depth mobile · V7 Account&Security · V8 Avatar upload (native) · V9 Passkeys/biometrics (native) · V10 Notifications/push (native). **V4 done → Next: V5.**
 
 ## Post-v1
 - **Bolt 10 — Design Parity:** `Completed` — deportivo theme (light/dark) + themed primitives + all screens restyled + flags/avatars (react-native-svg, native rebuilt). Verified on device. Follow-ups: embed Barlow/Geist fonts; iOS `pod install`; moderno/premium themes. See `bolts/bolt-10-design-parity/`.
 
 ## Activation checklist (to run the full app)
-1. ✅ DONE — `supabase db push`: all **12/12 migrations** applied to remote (incl. V2 nickname_cooldown + V3 auto_scoring trigger + realtime publication).
-2. ✅ DONE — `functions deploy`: **10/10 Edge Functions** ACTIVE (added V3 `enter-result`; redeployed `set-nickname` for RATE_LIMITED); ADMIN_SECRET set.
+1. ✅ DONE — `supabase db push`: all **13/13 migrations** applied to remote (incl. V2 cooldown + V3 auto_scoring + V4 live_projection).
+2. ✅ DONE — `functions deploy`: **10/10 Edge Functions** ACTIVE (V3 `enter-result` + V4 status param; `set-nickname` RATE_LIMITED); ADMIN_SECRET set.
 3. ⬜ Native rebuild for FlashList: `bundle exec pod install --project-directory=ios` + `npm run android`/`ios`.
 4. ⬜ Dashboard: Auth redirect URLs `betmeet://auth/{callback,reset,confirm}` + public `avatars` bucket (upload defaults/01–06.png).
 5. ⬜ (Optional) invoke `compute-score` on the 3 seeded FINISHED matches to populate scores/leaderboard.

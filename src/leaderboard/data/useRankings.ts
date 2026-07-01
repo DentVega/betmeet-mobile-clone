@@ -21,6 +21,28 @@ export function useGlobalRanking() {
   });
 }
 
+export interface LiveRankRow {
+  user_id: string;
+  nickname: string;
+  avatar_url: string;
+  confirmed_points: number;
+  projected_points: number;
+  confirmed_rank: number;
+  projected_rank: number;
+}
+
+/** Global ranking with live projection (V4). confirmed==projected when no match is LIVE. */
+export function useGlobalRankingLive() {
+  return useQuery({
+    queryKey: ['ranking', 'global'],
+    queryFn: async (): Promise<LiveRankRow[]> => {
+      const { data, error } = await supabase.rpc('fn_global_ranking_live', { p_limit: 100 });
+      if (error) throw error;
+      return (data as LiveRankRow[]) ?? [];
+    },
+  });
+}
+
 export function usePoolLeaderboard(poolId: string) {
   return useQuery({
     queryKey: ['ranking', 'pool', poolId],

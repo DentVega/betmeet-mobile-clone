@@ -7,6 +7,7 @@ import { Screen, BootingScreen } from '../../ui/Screen';
 import { useFixture } from '../data/useFixture';
 import { todayKey, isPastDay, type FixtureMatch } from '../data/fixture';
 import { MatchCard } from '../components/MatchCard';
+import { LiveBanner } from '../components/LiveBanner';
 import { PredictionForm } from '../components/PredictionForm';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
@@ -57,6 +58,7 @@ export function MatchesScreen() {
 
   return (
     <Screen>
+      <LiveBanner />
       {hasPast && (
         <Pressable onPress={() => setShowPast((v) => !v)} style={styles.toggle}>
           <Text style={[styles.toggleText, { color: colors.primary }]}>{showPast ? dict.hidePast : dict.showPast}</Text>

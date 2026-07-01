@@ -1,4 +1,4 @@
-/** Rankings tab — global leaderboard (US-L1). */
+/** Rankings tab — global leaderboard with live projection (US-L1 / FR-RT4). */
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
@@ -6,17 +6,18 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Screen, BootingScreen } from '../../ui/Screen';
 import { Txt } from '../../ui/Text';
 import { useSessionStore } from '../../session/sessionStore';
-import { useGlobalRanking, type RankRow as Row } from '../data/useRankings';
-import { RankRow } from '../components/RankRow';
+import { useGlobalRankingLive, type LiveRankRow as Row } from '../data/useRankings';
+import { LiveRankRow } from '../components/LiveRankRow';
+import { LiveBanner } from '../../matches/components/LiveBanner';
 import { t } from '../../i18n';
 
 export function RankingsScreen() {
   const userId = useSessionStore((s) => s.userId);
-  const { data, isLoading, refetch } = useGlobalRanking();
+  const { data, isLoading, refetch } = useGlobalRankingLive();
   useFocusEffect(useCallback(() => { refetch(); }, [refetch]));
 
   const renderItem = useCallback(
-    ({ item }: { item: Row }) => <RankRow row={item} isMe={item.user_id === userId} />,
+    ({ item }: { item: Row }) => <LiveRankRow row={item} isMe={item.user_id === userId} />,
     [userId],
   );
 
@@ -30,6 +31,7 @@ export function RankingsScreen() {
   }
   return (
     <Screen>
+      <LiveBanner />
       <FlashList data={data} renderItem={renderItem} keyExtractor={(i) => i.user_id} />
     </Screen>
   );

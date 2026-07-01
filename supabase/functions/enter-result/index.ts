@@ -8,6 +8,7 @@ interface Body {
   homeScore?: number;
   awayScore?: number;
   winnerTeamId?: string | null;
+  status?: 'LIVE' | 'FINISHED';
   revert?: boolean;
 }
 
@@ -17,7 +18,7 @@ Deno.serve(async (req) => {
     return json({ ok: false, code: 'UNAUTHENTICATED', message: 'bad admin secret' }, 401);
   }
   try {
-    const { matchId, homeScore, awayScore, winnerTeamId, revert } = (await req
+    const { matchId, homeScore, awayScore, winnerTeamId, status, revert } = (await req
       .json()
       .catch(() => ({}))) as Body;
     if (!matchId) return json({ ok: false, code: 'INVALID', message: 'matchId required' });
@@ -48,13 +49,15 @@ Deno.serve(async (req) => {
     const derived =
       homeScore > awayScore ? match.home_team_id : homeScore < awayScore ? match.away_team_id : null;
     const winner = winnerTeamId !== undefined ? winnerTeamId : derived;
+    // LIVE pushes a provisional score (trigger keeps prediction_scores empty until FINISHED).
+    const nextStatus = status === 'LIVE' ? 'LIVE' : 'FINISHED';
 
     const { error } = await sb
       .from('matches')
-      .update({ status: 'FINISHED', home_score: homeScore, away_score: awayScore, winner_team_id: winner })
+      .update({ status: nextStatus, home_score: homeScore, away_score: awayScore, winner_team_id: winner })
       .eq('id', matchId);
     if (error) return json({ ok: false, code: 'INTERNAL', message: error.message }, 500);
-    return json({ ok: true, winnerTeamId: winner });
+    return json({ ok: true, status: nextStatus, winnerTeamId: winner });
   } catch (e) {
     return json({ ok: false, code: 'INTERNAL', message: String(e) }, 500);
   }

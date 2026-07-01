@@ -31,7 +31,8 @@ function MatchCardBase({ match, onPredict }: Props) {
   const home = match.homeTeam?.fifaCode ?? match.homePlaceholder ?? '—';
   const away = match.awayTeam?.fifaCode ?? match.awayPlaceholder ?? '—';
   const editable = canEdit(match, new Date());
-  const finished = match.status === 'FINISHED';
+  const live = match.status === 'LIVE';
+  const showScore = (live || match.status === 'FINISHED') && match.homeScore !== null;
   const pred = match.prediction;
 
   return (
@@ -49,8 +50,10 @@ function MatchCardBase({ match, onPredict }: Props) {
         </View>
         <Txt variant="muted" style={styles.kickoff}>{kickoffTime(match.kickoffAt)}</Txt>
 
-        {finished && match.homeScore !== null && (
-          <Txt variant="heading" style={styles.result}>{match.homeScore} — {match.awayScore}</Txt>
+        {showScore && (
+          <Txt variant="heading" color={live ? colors.live : undefined} style={styles.result}>
+            {match.homeScore} — {match.awayScore}
+          </Txt>
         )}
 
         {pred ? (
