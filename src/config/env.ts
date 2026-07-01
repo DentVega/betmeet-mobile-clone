@@ -17,9 +17,13 @@ const PLACEHOLDER_ANON = 'placeholder-anon-key';
 
 const url = process.env.SUPABASE_URL ?? '';
 const anon = process.env.SUPABASE_ANON_KEY ?? '';
+// WebAuthn Relying Party ID (a domain you control that hosts assetlinks.json).
+// Empty = passkeys disabled (the UI degrades gracefully). See V9 activation docs.
+const passkeyRpId = process.env.PASSKEY_RP_ID ?? '';
 
 export const ENV = {
   SUPABASE_URL: url || PLACEHOLDER_URL,
   SUPABASE_ANON_KEY: anon || PLACEHOLDER_ANON,
   isConfigured: Boolean(url && anon),
+  PASSKEY_RP_ID: passkeyRpId,
 } as const;
