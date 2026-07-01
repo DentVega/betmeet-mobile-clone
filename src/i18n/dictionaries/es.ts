@@ -5,7 +5,7 @@
 export const es = {
   common: { loading: 'Cargando…', retry: 'Reintentar', back: 'Atrás', show: 'Mostrar', hide: 'Ocultar' },
   shell: { signOut: 'Cerrar sesión' },
-  tabs: { matches: 'Partidos', pools: 'Ligas', rankings: 'Clasificación' },
+  tabs: { matches: 'Partidos', pools: 'Ligas', rankings: 'Clasificación', rules: 'Reglas' },
   placeholder: { comingSoon: 'Próximamente' },
   matches: {
     tbd: 'Por definir',

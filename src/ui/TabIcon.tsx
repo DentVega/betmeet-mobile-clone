@@ -2,7 +2,7 @@
 import React from 'react';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
-export type TabName = 'matches' | 'pools' | 'rankings' | 'settings';
+export type TabName = 'matches' | 'pools' | 'rankings' | 'rules' | 'settings';
 
 interface Props {
   name: TabName;
@@ -47,6 +47,13 @@ function TabIconBase({ name, color, size = 24 }: Props) {
           <Path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
           <Path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
           <Path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+        </Svg>
+      );
+    case 'rules': // book-open (how to play)
+      return (
+        <Svg {...common}>
+          <Path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <Path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
         </Svg>
       );
     case 'settings': // gear

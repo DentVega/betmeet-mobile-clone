@@ -67,7 +67,6 @@ function SettingsStack() {
       }}>
       <SettingsStackNav.Screen name="SettingsHome" component={SettingsScreen} options={{ title: t().settings.title }} />
       <SettingsStackNav.Screen name="Security" component={SecurityScreen} options={{ title: t().settings.account }} />
-      <SettingsStackNav.Screen name="Rules" component={RulesScreen} options={{ title: t().onboarding.rules.title }} />
     </SettingsStackNav.Navigator>
   );
 }
@@ -102,6 +101,11 @@ export function AppTabs() {
         name="Rankings"
         component={RankingsScreen}
         options={{ title: dict.tabs.rankings, tabBarIcon: ({ color, size }) => <TabIcon name="rankings" color={color} size={size} /> }}
+      />
+      <Tabs.Screen
+        name="Rules"
+        component={RulesScreen}
+        options={{ title: dict.tabs.rules, tabBarIcon: ({ color, size }) => <TabIcon name="rules" color={color} size={size} /> }}
       />
       <Tabs.Screen
         name="Settings"

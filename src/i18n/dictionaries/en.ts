@@ -4,7 +4,7 @@ import type { Dictionary } from './es';
 export const en: Dictionary = {
   common: { loading: 'Loading…', retry: 'Retry', back: 'Back', show: 'Show', hide: 'Hide' },
   shell: { signOut: 'Sign out' },
-  tabs: { matches: 'Matches', pools: 'Pools', rankings: 'Rankings' },
+  tabs: { matches: 'Matches', pools: 'Pools', rankings: 'Rankings', rules: 'Rules' },
   placeholder: { comingSoon: 'Coming soon' },
   matches: {
     tbd: 'To be decided',
