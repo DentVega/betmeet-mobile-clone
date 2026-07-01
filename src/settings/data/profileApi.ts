@@ -16,7 +16,7 @@ export async function changeNickname(base: string): Promise<NicknameResult> {
 export async function setAvatar(
   userId: string,
   avatarUrl: string,
-  source: 'DEFAULT_SET' | 'GOOGLE_PHOTO',
+  source: 'DEFAULT_SET' | 'GOOGLE_PHOTO' | 'CUSTOM_UPLOAD',
 ): Promise<{ ok: boolean }> {
   const { error } = await supabase
     .from('profiles')
