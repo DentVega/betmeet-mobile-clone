@@ -7,6 +7,7 @@ import { useTheme } from '../theme/useTheme';
 import { fonts } from '../theme/tokens';
 import { rulesSections } from './rulesContent';
 import { RuleBody } from './RuleBody';
+import { ScoreCalculator } from './ScoreCalculator';
 
 export function RulesScreen() {
   const { colors } = useTheme();
@@ -16,6 +17,7 @@ export function RulesScreen() {
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.content}>
+        <ScoreCalculator />
         {sections.map((s) => {
           const expanded = open === s.slug;
           return (

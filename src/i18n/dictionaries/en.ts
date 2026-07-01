@@ -32,6 +32,7 @@ export const en: Dictionary = {
     },
   },
   leaderboard: { empty: 'No points yet. Come back after matches finish.', proj: 'proj.' },
+  calc: { title: 'Calculator', prediction: 'Your prediction', actual: 'Actual result', knockout: 'Knockout stage', penaltyWinner: 'Penalty winner', home: 'Home', away: 'Away', exact: 'Exact score', result: 'Result', homeGoalPt: 'Home goal', awayGoalPt: 'Away goal', penaltyBonus: 'Penalty bonus', total: 'Total' },
   settings: {
     title: 'Settings',
     profile: 'Profile',

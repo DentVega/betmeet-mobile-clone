@@ -33,6 +33,7 @@ export const es = {
     },
   },
   leaderboard: { empty: 'Aún no hay puntos. Vuelve cuando terminen los partidos.', proj: 'proy.' },
+  calc: { title: 'Calculadora', prediction: 'Tu predicción', actual: 'Resultado real', knockout: 'Fase eliminatoria', penaltyWinner: 'Ganador en penales', home: 'Local', away: 'Visitante', exact: 'Marcador exacto', result: 'Resultado', homeGoalPt: 'Gol local', awayGoalPt: 'Gol visitante', penaltyBonus: 'Bonus penales', total: 'Total' },
   settings: {
     title: 'Ajustes',
     profile: 'Perfil',
