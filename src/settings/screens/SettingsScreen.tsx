@@ -19,6 +19,7 @@ import { useSessionStore } from '../../session/sessionStore';
 import { authService } from '../../auth/authService';
 import { useMyProfile } from '../data/useMyProfile';
 import { changeNickname, setAvatar, googleAvatarUrl } from '../data/profileApi';
+import { NotificationsPanel } from '../components/NotificationsPanel';
 import { t, tr } from '../../i18n';
 
 const NICK_RE = /^[A-Za-z0-9_-]{3,20}$/;
@@ -120,7 +121,7 @@ export function SettingsScreen() {
           <Button title={dict.account} variant="secondary" onPress={() => nav.navigate('Security')} />
         </Section>
         <Section title={dict.notifications}>
-          <Txt variant="muted">{dict.comingSoon}</Txt>
+          <NotificationsPanel />
         </Section>
 
         <Button title={dict.signOut} variant="destructive" onPress={() => void authService.signOut()} />

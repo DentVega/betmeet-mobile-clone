@@ -55,6 +55,9 @@ verify_jwt = false
 [functions.enter-result]
 verify_jwt = false
 
+[functions.notifications-dispatch]
+verify_jwt = false
+
 [functions.set-nickname]
 verify_jwt = true
 
