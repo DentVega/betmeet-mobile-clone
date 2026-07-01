@@ -1,30 +1,28 @@
 /**
- * Authenticated app shell: bottom tabs (Matches | Pools | Rankings). Pools is a
- * nested stack so deep-link joins can target PoolJoin. Placeholder screens in
- * Bolt 0 — real features land in Bolts 4/5/6.
+ * Authenticated app shell: bottom tabs (Matches | Pools | Rankings | Settings).
+ * Pools/Settings are nested stacks. Theme/locale controls + sign-out moved into
+ * Settings (Bolt V2) — headers are now titles only.
  */
 import React from 'react';
-import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import type { AppTabsParamList, PoolsStackParamList } from './types';
-import { SignOutButton } from '../../auth/SignOutButton';
-import { ThemeCycleButton } from '../../ui/ThemeSwitcher';
-import { LocaleCycleButton } from '../../ui/LocaleSwitcher';
+import type { AppTabsParamList, PoolsStackParamList, SettingsStackParamList } from './types';
 import { MatchesScreen } from '../../matches/screens/MatchesScreen';
 import { PoolsListScreen } from '../../pools/screens/PoolsListScreen';
 import { PoolNewScreen } from '../../pools/screens/PoolNewScreen';
 import { PoolDiscoverScreen } from '../../pools/screens/PoolDiscoverScreen';
 import { PoolDetailScreen } from '../../pools/screens/PoolDetailScreen';
 import { PoolJoinScreen } from '../../pools/screens/PoolJoinScreen';
-import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
 import { PoolLeaderboardScreen } from '../../leaderboard/screens/PoolLeaderboardScreen';
+import { RankingsScreen } from '../../leaderboard/screens/RankingsScreen';
+import { SettingsScreen } from '../../settings/screens/SettingsScreen';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
 import { fonts } from '../../theme/tokens';
 
 const Tabs = createBottomTabNavigator<AppTabsParamList>();
 const PoolsStackNav = createNativeStackNavigator<PoolsStackParamList>();
+const SettingsStackNav = createNativeStackNavigator<SettingsStackParamList>();
 
 function PoolsStack() {
   const { colors } = useTheme();
@@ -47,6 +45,21 @@ function PoolsStack() {
   );
 }
 
+function SettingsStack() {
+  const { colors } = useTheme();
+  return (
+    <SettingsStackNav.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.card },
+        headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },
+        headerShadowVisible: false,
+        contentStyle: { backgroundColor: colors.background },
+      }}>
+      <SettingsStackNav.Screen name="SettingsHome" component={SettingsScreen} options={{ title: t().settings.title }} />
+    </SettingsStackNav.Navigator>
+  );
+}
+
 export function AppTabs() {
   const dict = t();
   const { colors } = useTheme();
@@ -54,13 +67,6 @@ export function AppTabs() {
     <Tabs.Navigator
       screenOptions={{
         headerShown: true,
-        headerLeft: () => (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <ThemeCycleButton />
-            <LocaleCycleButton />
-          </View>
-        ),
-        headerRight: () => <SignOutButton />,
         headerStyle: { backgroundColor: colors.card },
         headerTitleStyle: { color: colors.foreground, fontFamily: fonts.displayBold },
         headerShadowVisible: false,
@@ -69,21 +75,10 @@ export function AppTabs() {
         tabBarLabelStyle: { fontFamily: fonts.sansMedium },
         tabBarStyle: { backgroundColor: colors.card, borderTopColor: colors.border },
       }}>
-      <Tabs.Screen
-        name="Matches"
-        component={MatchesScreen}
-        options={{ title: dict.tabs.matches }}
-      />
-      <Tabs.Screen
-        name="Pools"
-        component={PoolsStack}
-        options={{ title: dict.tabs.pools }}
-      />
-      <Tabs.Screen
-        name="Rankings"
-        component={RankingsScreen}
-        options={{ title: dict.tabs.rankings }}
-      />
+      <Tabs.Screen name="Matches" component={MatchesScreen} options={{ title: dict.tabs.matches }} />
+      <Tabs.Screen name="Pools" component={PoolsStack} options={{ title: dict.tabs.pools, headerShown: false }} />
+      <Tabs.Screen name="Rankings" component={RankingsScreen} options={{ title: dict.tabs.rankings }} />
+      <Tabs.Screen name="Settings" component={SettingsStack} options={{ title: dict.settings.title, headerShown: false }} />
     </Tabs.Navigator>
   );
 }

@@ -27,8 +27,13 @@ export type PoolsStackParamList = {
   PoolJoin: { token: string };
 };
 
+export type SettingsStackParamList = {
+  SettingsHome: undefined;
+};
+
 export type AppTabsParamList = {
   Matches: undefined;
   Pools: NavigatorScreenParams<PoolsStackParamList> | undefined;
   Rankings: undefined;
+  Settings: NavigatorScreenParams<SettingsStackParamList> | undefined;
 };

@@ -6,8 +6,9 @@ import { useEffect } from 'react';
 import { supabase, registerAuthRefresh } from './supabaseClient';
 import { useSessionStore } from './sessionStore';
 import { fetchOnboardingCompleted } from '../auth/profileGate';
+import { useLocaleStore } from '../i18n/localeStore';
 
-/** Resolve the profile gate for a verified user; safe no-op otherwise. */
+/** Resolve the profile gate + apply the saved locale for a verified user. */
 async function resolveGate(userId: string | null, verified: boolean) {
   const { setOnboardingCompleted } = useSessionStore.getState();
   if (!userId || !verified) {
@@ -15,6 +16,12 @@ async function resolveGate(userId: string | null, verified: boolean) {
   }
   const completed = await fetchOnboardingCompleted(userId);
   setOnboardingCompleted(completed);
+  // Apply the profile's saved language (server-driven, no write-back).
+  const { data } = await supabase.from('profiles').select('locale').eq('id', userId).maybeSingle();
+  const loc = (data as { locale?: string } | null)?.locale;
+  if (loc === 'es' || loc === 'en') {
+    useLocaleStore.getState().applyLocale(loc);
+  }
 }
 
 export function useSessionBootstrap(): void {
