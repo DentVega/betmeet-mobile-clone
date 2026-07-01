@@ -48,6 +48,7 @@ const fileEnv = {
 const SUPABASE_URL = process.env.SUPABASE_URL ?? fileEnv.SUPABASE_URL ?? '';
 const SUPABASE_ANON_KEY =
   process.env.SUPABASE_ANON_KEY ?? fileEnv.SUPABASE_ANON_KEY ?? '';
+const PASSKEY_RP_ID = process.env.PASSKEY_RP_ID ?? fileEnv.PASSKEY_RP_ID ?? '';
 
 /**
  * Rspack configuration enhanced with Re.Pack defaults for React Native.
@@ -84,6 +85,7 @@ export default Repack.defineRspackConfig({
     new rspack.DefinePlugin({
       'process.env.SUPABASE_URL': JSON.stringify(SUPABASE_URL),
       'process.env.SUPABASE_ANON_KEY': JSON.stringify(SUPABASE_ANON_KEY),
+      'process.env.PASSKEY_RP_ID': JSON.stringify(PASSKEY_RP_ID),
     }),
   ],
 });

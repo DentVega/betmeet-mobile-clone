@@ -9,6 +9,7 @@ import { Button } from '../../ui/Button';
 import { useTheme } from '../../theme/useTheme';
 import { authService } from '../../auth/authService';
 import { linkGoogle } from '../../auth/googleOAuth';
+import { registerPasskey, passkeysAvailable } from '../../auth/passkeys';
 import {
   listFactors, enrollTotp, verifyTotp, disableMfa,
   listIdentities, unlinkIdentity, deleteAccount, type TotpFactor,
@@ -119,6 +120,20 @@ export function SecurityScreen() {
             <Button title={dict.enableMfa} variant="secondary" onPress={onEnroll} />
           )}
         </Section>
+
+        {passkeysAvailable() && (
+          <Section title={dict.passkeys}>
+            <Button
+              title={dict.registerPasskey}
+              variant="secondary"
+              onPress={async () => {
+                const r = await registerPasskey();
+                flash(r.ok ? dict.passkeyRegistered : dict.errorGeneric, r.ok);
+                if (r.ok) await refresh();
+              }}
+            />
+          </Section>
+        )}
 
         <Section title={dict.providers}>
           {identities.map((idn) => (
