@@ -12,6 +12,8 @@
 - Bolts (Planned): V1 i18n ✅ · V2 Settings+Profile ✅ · V3 Results&Auto-scoring ✅ · V4 Realtime&Live ✅ · V5 Pool-Depth backend ✅ · V6 Pool-Depth mobile ✅ · V7 Account&Security ✅ · V8 Avatar upload (native) ⛔deferred(RN0.86) · V9 Passkeys (native) ✅code-complete/⏳activation · V10 Push (native) ✅code-complete/⏳activation. **v2 COMPLETE: V1–V7 done · V8 deferred · V9/V10 code-complete (activation-pending).**
 
 ## Post-v1
+- **FIRE — Pull-to-refresh (tab roots):** `Completed` — swipe-down refresh on Matches, Pools, Rankings via new shared `ui/RefreshControl.tsx` (`useRefreshControl`, theme-tinted) passed to each FlashList's `refreshControl` prop; wired to existing react-query `isRefetching`/`refetch`. Rules/Settings-root/ProfileScreen intentionally skipped (static / local prefs / not-a-tab). No new deps, no i18n. tsc clean, jest 77/77 (`ui/__tests__/RefreshControl.test.tsx`). Follow-ups: refreshable empty states; optional ProfileScreen add; RNTL+agent-device smoke.
+- **FIRE — User-selectable timezone:** `Completed` — Settings timezone override (device tz = default). `settings/timezoneStore.ts` (`useTimezone()`) + `ui/TimezoneSwitcher.tsx`; 3 matches call sites made reactive; `useFixture` re-groups client-side on tz change (no refetch). en/es i18n synced. tsc clean, jest 74/74. Follow-up: extend to any future screens that show match times; optional profiles sync.
 - **Bolt 10 — Design Parity:** `Completed` — deportivo theme (light/dark) + themed primitives + all screens restyled + flags/avatars (react-native-svg, native rebuilt). Verified on device. Follow-ups: embed Barlow/Geist fonts; iOS `pod install`; moderno/premium themes. See `bolts/bolt-10-design-parity/`.
 
 ## Activation checklist (to run the full app)

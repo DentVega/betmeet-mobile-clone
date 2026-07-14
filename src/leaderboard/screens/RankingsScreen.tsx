@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useFocusEffect } from '@react-navigation/native';
 import { Screen, BootingScreen } from '../../ui/Screen';
+import { useRefreshControl } from '../../ui/RefreshControl';
 import { Txt } from '../../ui/Text';
 import { useSessionStore } from '../../session/sessionStore';
 import { useGlobalRankingLive, type LiveRankRow as Row } from '../data/useRankings';
@@ -13,8 +14,9 @@ import { t } from '../../i18n';
 
 export function RankingsScreen() {
   const userId = useSessionStore((s) => s.userId);
-  const { data, isLoading, refetch } = useGlobalRankingLive();
+  const { data, isLoading, isRefetching, refetch } = useGlobalRankingLive();
   useFocusEffect(useCallback(() => { refetch(); }, [refetch]));
+  const refreshControl = useRefreshControl({ refetch, refreshing: isRefetching });
 
   const renderItem = useCallback(
     ({ item }: { item: Row }) => <LiveRankRow row={item} isMe={item.user_id === userId} />,
@@ -32,7 +34,7 @@ export function RankingsScreen() {
   return (
     <Screen>
       <LiveBanner />
-      <FlashList data={data} renderItem={renderItem} keyExtractor={(i) => i.user_id} />
+      <FlashList data={data} renderItem={renderItem} keyExtractor={(i) => i.user_id} refreshControl={refreshControl} />
     </Screen>
   );
 }

@@ -9,12 +9,11 @@ import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import { Txt } from '../../ui/Text';
 import { Flag } from '../../ui/Flag';
+import { useTimezone } from '../../settings/timezoneStore';
 
-const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-function kickoffTime(iso: string | null): string {
+function kickoffTime(iso: string | null, tz: string): string {
   if (!iso) return '';
-  return new Intl.DateTimeFormat(getLocale(), { hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(new Date(iso));
+  return new Intl.DateTimeFormat(getLocale(), { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(new Date(iso));
 }
 
 const statusTone = (s: FixtureMatch['status']) =>
@@ -28,6 +27,7 @@ interface Props {
 function MatchCardBase({ match, onPredict }: Props) {
   const dict = t().matches;
   const { colors } = useTheme();
+  const tz = useTimezone();
   const home = match.homeTeam?.fifaCode ?? match.homePlaceholder ?? '—';
   const away = match.awayTeam?.fifaCode ?? match.awayPlaceholder ?? '—';
   const editable = canEdit(match, new Date());
@@ -50,7 +50,7 @@ function MatchCardBase({ match, onPredict }: Props) {
             <Badge label={dict.statuses[match.status]} tone={statusTone(match.status)} />
           </View>
         </View>
-        <Txt variant="muted" style={styles.kickoff}>{kickoffTime(match.kickoffAt)}</Txt>
+        <Txt variant="muted" style={styles.kickoff}>{kickoffTime(match.kickoffAt, tz)}</Txt>
 
         {showScore && (
           <Txt variant="heading" color={live ? colors.live : undefined} style={styles.result}>

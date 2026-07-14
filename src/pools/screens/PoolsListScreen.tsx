@@ -6,6 +6,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { PoolsStackParamList } from '../../app/navigation/types';
 import { Screen, BootingScreen } from '../../ui/Screen';
+import { useRefreshControl } from '../../ui/RefreshControl';
 import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 import { Txt } from '../../ui/Text';
@@ -18,8 +19,9 @@ type Nav = NativeStackNavigationProp<PoolsStackParamList, 'PoolsList'>;
 export function PoolsListScreen() {
   const nav = useNavigation<Nav>();
   const dict = t().pools;
-  const { data, isLoading, refetch } = useMyPools();
+  const { data, isLoading, isRefetching, refetch } = useMyPools();
   useFocusEffect(useCallback(() => { refetch(); }, [refetch]));
+  const refreshControl = useRefreshControl({ refetch, refreshing: isRefetching });
 
   const renderItem = useCallback(
     ({ item }: { item: PoolSummary }) => (
@@ -47,7 +49,7 @@ export function PoolsListScreen() {
       {(data ?? []).length === 0 ? (
         <Txt variant="muted" style={styles.empty}>{dict.empty}</Txt>
       ) : (
-        <FlashList data={data} renderItem={renderItem} keyExtractor={(i) => i.id} />
+        <FlashList data={data} renderItem={renderItem} keyExtractor={(i) => i.id} refreshControl={refreshControl} />
       )}
     </Screen>
   );

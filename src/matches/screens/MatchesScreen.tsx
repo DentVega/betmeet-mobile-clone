@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useFocusEffect } from '@react-navigation/native';
 import { Screen, BootingScreen } from '../../ui/Screen';
+import { useRefreshControl } from '../../ui/RefreshControl';
 import { useFixture } from '../data/useFixture';
 import { todayKey, isPastDay, type FixtureMatch } from '../data/fixture';
 import { MatchCard } from '../components/MatchCard';
@@ -11,19 +12,20 @@ import { LiveBanner } from '../components/LiveBanner';
 import { PredictionForm } from '../components/PredictionForm';
 import { t } from '../../i18n';
 import { useTheme } from '../../theme/useTheme';
+import { useTimezone } from '../../settings/timezoneStore';
 
 type Row =
   | { type: 'header'; key: string; label: string }
   | { type: 'match'; key: string; match: FixtureMatch };
 
-const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 export function MatchesScreen() {
   const dict = t().matches;
   const { colors } = useTheme();
-  const { data: days, isLoading, refetch } = useFixture();
+  const tz = useTimezone();
+  const { data: days, isLoading, isRefetching, refetch } = useFixture();
   const [showPast, setShowPast] = useState(false);
   const [selected, setSelected] = useState<FixtureMatch | null>(null);
+  const refreshControl = useRefreshControl({ refetch, refreshing: isRefetching });
 
   useFocusEffect(
     useCallback(() => {
@@ -31,7 +33,7 @@ export function MatchesScreen() {
     }, [refetch]),
   );
 
-  const today = todayKey(new Date(), TZ);
+  const today = todayKey(new Date(), tz);
   const rows = useMemo<Row[]>(() => {
     const out: Row[] = [];
     for (const d of days ?? []) {
@@ -69,6 +71,7 @@ export function MatchesScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.key}
         getItemType={(item) => item.type}
+        refreshControl={refreshControl}
       />
       {selected && <PredictionForm match={selected} onClose={() => setSelected(null)} />}
     </Screen>

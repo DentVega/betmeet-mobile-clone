@@ -1,10 +1,10 @@
 /** Active-competition fixture → Day[] (RLS reads; my global predictions + scores). */
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../session/supabaseClient';
 import { getLocale, tr } from '../../i18n';
 import { groupMatchesByDay, type Day, type FixtureMatch } from './fixture';
-
-const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+import { useTimezone } from '../../settings/timezoneStore';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function shape(row: any): FixtureMatch {
@@ -41,9 +41,10 @@ function shape(row: any): FixtureMatch {
 }
 
 export function useFixture() {
-  return useQuery({
+  const tz = useTimezone();
+  const query = useQuery({
     queryKey: ['fixture'],
-    queryFn: async (): Promise<Day[]> => {
+    queryFn: async (): Promise<FixtureMatch[]> => {
       const { data: comp } = await supabase
         .from('competitions').select('id').eq('is_active', true).limit(1).maybeSingle();
       if (!comp) return [];
@@ -59,12 +60,18 @@ export function useFixture() {
         )
         .eq('competition_id', comp.id);
       if (error) throw error;
-      const matches = (data ?? []).map(shape);
-      return groupMatchesByDay(matches, {
-        timeZone: TZ,
-        locale: getLocale(),
-        tbdLabel: tr('matches.tbd'),
-      });
+      return (data ?? []).map(shape);
     },
   });
+
+  // Group client-side so a timezone change re-buckets days without a network refetch.
+  const days = useMemo<Day[] | undefined>(
+    () =>
+      query.data
+        ? groupMatchesByDay(query.data, { timeZone: tz, locale: getLocale(), tbdLabel: tr('matches.tbd') })
+        : undefined,
+    [query.data, tz],
+  );
+
+  return { ...query, data: days };
 }
