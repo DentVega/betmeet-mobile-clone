@@ -40,6 +40,11 @@ export const es = {
     appearance: 'Apariencia',
     language: 'Idioma',
     account: 'Cuenta y seguridad',
+    timezone: {
+      title: 'Zona horaria',
+      device: 'Predeterminada del dispositivo',
+      deviceHint: 'Los partidos se muestran en esta zona. Dispositivo: {tz}.',
+    },
     notifications: 'Notificaciones',
     rules: 'Reglas',
     comingSoon: 'Próximamente',

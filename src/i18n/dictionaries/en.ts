@@ -39,6 +39,11 @@ export const en: Dictionary = {
     appearance: 'Appearance',
     language: 'Language',
     account: 'Account & security',
+    timezone: {
+      title: 'Time zone',
+      device: 'Device default',
+      deviceHint: 'Matches are shown in this zone. Device: {tz}.',
+    },
     notifications: 'Notifications',
     rules: 'Rules',
     comingSoon: 'Coming soon',

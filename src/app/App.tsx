@@ -17,6 +17,7 @@ import { useSessionBootstrap } from '../session/useSessionBootstrap';
 import { useDeepLinkHandler } from './deepLinks';
 import { useBrandStore } from '../theme/brandStore';
 import { useLocaleStore } from '../i18n/localeStore';
+import { useTimezoneStore } from '../settings/timezoneStore';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -26,6 +27,7 @@ function App() {
   React.useEffect(() => {
     void useBrandStore.getState().hydrate();
     void useLocaleStore.getState().hydrate();
+    void useTimezoneStore.getState().hydrate();
   }, []);
 
   return (

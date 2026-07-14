@@ -11,6 +11,7 @@ import { Txt } from '../../ui/Text';
 import { Button } from '../../ui/Button';
 import { ThemeSwitcher } from '../../ui/ThemeSwitcher';
 import { LocaleSwitcher } from '../../ui/LocaleSwitcher';
+import { TimezoneSwitcher } from '../../ui/TimezoneSwitcher';
 import { authService } from '../../auth/authService';
 import { NotificationsPanel } from '../components/NotificationsPanel';
 import { t } from '../../i18n';
@@ -37,6 +38,10 @@ export function SettingsScreen() {
 
         <Section title={dict.language}>
           <LocaleSwitcher />
+        </Section>
+
+        <Section title={dict.timezone.title}>
+          <TimezoneSwitcher />
         </Section>
 
         <Section title={dict.account}>
