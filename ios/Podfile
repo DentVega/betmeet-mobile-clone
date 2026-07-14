@@ -17,6 +17,16 @@ end
 target 'BetmeetMobile' do
   config = use_native_modules!
 
+  # react-native-firebase pulls in Swift pods (FirebaseCoreInternal, …) that
+  # import Google C++ pods which don't define modules. When integrated as static
+  # libraries (the default, no use_frameworks!), those imports fail unless the
+  # Google pods generate module maps. Opt them in explicitly.
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'GoogleDataTransport', :modular_headers => true
+  pod 'nanopb', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
